@@ -49,6 +49,9 @@ public class GameManager : MonoBehaviour {
             GUILayout.Label(players[_playerID].transform.name);
         }
 
+        GUILayout.Label("Frames per second:");
+        GUILayout.Label((1.0f / Time.deltaTime).ToString());
+
         GUILayout.EndVertical();
         GUILayout.EndArea();
     }
