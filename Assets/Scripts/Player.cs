@@ -70,7 +70,6 @@ public class Player : NetworkBehaviour {
     }
 
     private void Die() {
-        //hello git
 
         isDead = true;
 
@@ -78,6 +77,8 @@ public class Player : NetworkBehaviour {
 
         Destroy(playerUIInstance);
 
+        cam.transform.parent = rigidbodyOnDeath[0].transform;
+;
         string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder" };
         float[] _mass = { 3f, 2f, 2f, 2f, 2f };
 
@@ -126,6 +127,9 @@ public class Player : NetworkBehaviour {
 
     public void SetDefaults() {
         isDead = false;
+
+        cam.transform.position = gameObject.transform.position;
+        cam.transform.parent = gameObject.transform;
 
         currentHealth = maxHealth;
 
