@@ -70,6 +70,8 @@ public class Player : NetworkBehaviour {
     }
 
     private void Die() {
+        //hello git
+
         isDead = true;
 
         shoot.CancelInvoke("Shoot");
