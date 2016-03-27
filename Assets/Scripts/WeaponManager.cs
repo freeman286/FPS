@@ -26,6 +26,9 @@ public class WeaponManager : NetworkBehaviour {
 
     private GameObject currentFirePoint;
 
+    [SerializeField]
+    private GameObject weaponSwapSound;
+
     [SyncVar]
     private int reloading = 100;
 
@@ -104,28 +107,33 @@ public class WeaponManager : NetworkBehaviour {
             return;
         }
 
-        if (reloading < 10)
-        {
+        if (reloading < 10) {
             weaponHolder.transform.Rotate(3, 0, 0 * Time.deltaTime);
-        }
-        else if (reloading < 20)
-        {
+        } else if (reloading < 20) {
             weaponHolder.transform.Rotate(-3, 0, 0 * Time.deltaTime);
-        }
-        else {
+        } else {
             weaponHolder.transform.Rotate(0, 0, 0);
         }
 
 
-        if (currentWeapon == primaryWeapon && reloading == 10)
-        {
+        if (currentWeapon == primaryWeapon && reloading == 10) {
             EquipWeapon(secondaryWeapon);
-        }
-        else if (reloading == 10)
-        {
+            PlayWeaponSwapSound();
+        } else if (reloading == 10) {
             EquipWeapon(primaryWeapon);
+            PlayWeaponSwapSound();
         }
 
         reloading += 1;
+    }
+
+    void PlayWeaponSwapSound () {
+        AudioSource _weaponSwapSound = (AudioSource)Instantiate(
+                weaponSwapSound.GetComponent<AudioSource>(),
+                gameObject.transform.position,
+                new Quaternion(0, 0, 0, 0)
+            );
+        _weaponSwapSound.Play();
+        Destroy(_weaponSwapSound.gameObject, 1f);
     }
 }
