@@ -89,7 +89,11 @@ public class PlayerShoot : NetworkBehaviour {
         CmdOnShoot();
 
         RaycastHit _hit;
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out _hit, currentWeapon.range, mask))
+        Vector3 _spread = new Vector3(
+            Random.Range(-currentWeapon.spread, currentWeapon.spread),
+            Random.Range(-currentWeapon.spread, currentWeapon.spread),
+            0);
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask))
         {
             if (_hit.collider.tag == "Player") {
 

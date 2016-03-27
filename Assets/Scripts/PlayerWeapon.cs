@@ -7,6 +7,7 @@ public class PlayerWeapon : MonoBehaviour{
     public int range;
 
     public float fireRate;
+    public float spread;
 
     public GameObject graphics;
     public GameObject shootSound;
