@@ -18,8 +18,11 @@ public class WeaponManager : NetworkBehaviour {
 
     private GameObject currentShootSound;
 
+    private GameObject currentFirePoint;
+
     void Start () {
         EquipWeapon(primaryWeapon);
+        Debug.Log(primaryWeapon.graphics);
     }
 
     public PlayerWeapon GetCurrentWeapon() {
@@ -28,6 +31,10 @@ public class WeaponManager : NetworkBehaviour {
 
     public WeaponGraphics GetCurrentGraphics() {
         return currentGraphics;
+    }
+
+    public GameObject GetCurrentFirePoint() {
+        return currentFirePoint;
     }
 
     public GameObject GetcurrentShootSound() {
@@ -39,8 +46,11 @@ public class WeaponManager : NetworkBehaviour {
 
         GameObject _weaponIns = (GameObject)Instantiate(_weapon.graphics, weaponHolder.position, weaponHolder.rotation);
         _weaponIns.transform.SetParent(weaponHolder);
+        GameObject _firePoint = (GameObject)Instantiate(_weapon.firePoint, weaponHolder.position, weaponHolder.rotation);
+        _firePoint.transform.SetParent(weaponHolder);
 
-        currentGraphics = _weaponIns.GetComponent<WeaponGraphics>();
+        currentGraphics = _weapon.GetComponent<WeaponGraphics>();
+        currentFirePoint = _firePoint;
         if (currentGraphics == null) {
             Debug.LogError("No WeaponGraphics for weapon " + _weaponIns.name);
         }

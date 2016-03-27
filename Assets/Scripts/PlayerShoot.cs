@@ -53,7 +53,7 @@ public class PlayerShoot : NetworkBehaviour {
 
     [ClientRpc]
     void RpcDoShootEffect () {
-        weaponManager.GetCurrentGraphics().muzzleFlash.Play();
+        weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
         AudioSource _shootSound = (AudioSource)Instantiate(
             weaponManager.GetcurrentShootSound().GetComponent<AudioSource>(),
             cam.transform.position,

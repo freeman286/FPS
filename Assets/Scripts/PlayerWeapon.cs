@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class PlayerWeapon
-{
-    public string name = "smg";
-    public int damage = 10;
-    public int range = 200;
+public class PlayerWeapon : MonoBehaviour{
+    public string name;
+    public int damage;
+    public int range;
 
-    public float fireRate = 10f;
+    public float fireRate;
 
     public GameObject graphics;
     public GameObject shootSound;
+    public GameObject firePoint;
 }
