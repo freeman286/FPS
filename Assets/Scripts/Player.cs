@@ -17,6 +17,9 @@ public class Player : NetworkBehaviour {
     [SyncVar]
     private int currentHealth;
 
+    [SyncVar]
+    private int healthRegen = 0;
+
     [SerializeField]
     private Behaviour[] disableOnDeath;
     private bool[] wasEnabled;
@@ -53,6 +56,11 @@ public class Player : NetworkBehaviour {
         if (rb.position.y < -10) {
             Die();
         }
+        healthRegen += 1;
+        if (healthRegen > 300 && currentHealth < 100) {
+            currentHealth += 1;
+            Debug.Log(transform.name + " now has " + currentHealth + " health.");
+        }
     }
 
     [ClientRpc]
@@ -61,6 +69,8 @@ public class Player : NetworkBehaviour {
             return;
 
         currentHealth -= _amount;
+
+        healthRegen = 0;
 
         Debug.Log(transform.name + " now has " + currentHealth + " health.");
 
