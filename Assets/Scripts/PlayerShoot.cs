@@ -19,6 +19,8 @@ public class PlayerShoot : NetworkBehaviour {
 
     private GameObject shootSound;
 
+    private int shootCooldown = 100;
+
     void Start() {
         if (cam == null)
         {
@@ -31,12 +33,14 @@ public class PlayerShoot : NetworkBehaviour {
 
     void Update() {
         currentWeapon = weaponManager.GetCurrentWeapon();
-        if (currentWeapon.fireRate <= 0) {
+        shootCooldown += 1;
+        if (currentWeapon.fireRate <= 0 && shootCooldown > 50) {
             if (Input.GetButtonDown("Fire1")) {
                 Shoot();
+                shootCooldown = 0;
             }
         }
-        else {
+        else if (currentWeapon.fireRate > 0) {
             if (Input.GetButtonDown("Fire1")) {
                 InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
             }

@@ -12,6 +12,9 @@ public class WeaponManager : NetworkBehaviour {
     [SerializeField]
     private PlayerWeapon primaryWeapon;
 
+    [SerializeField]
+    private PlayerWeapon secondaryWeapon;
+
     private PlayerWeapon currentWeapon;
 
     private WeaponGraphics currentGraphics;
@@ -20,9 +23,33 @@ public class WeaponManager : NetworkBehaviour {
 
     private GameObject currentFirePoint;
 
+    private int reloading = 100;
+
     void Start () {
         EquipWeapon(primaryWeapon);
         Debug.Log(primaryWeapon.graphics);
+    }
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            SwitchWeapon();
+        }
+        if (reloading < 10) {
+            weaponHolder.transform.Rotate(3, 0, 0 * Time.deltaTime);
+        } else if (reloading < 20) {
+            weaponHolder.transform.Rotate(-3, 0, 0 * Time.deltaTime);
+        } else {
+            weaponHolder.transform.Rotate(0, 0, 0);
+        }
+
+
+        if (currentWeapon == primaryWeapon && reloading == 10) {
+            EquipWeapon(secondaryWeapon);
+        } else if (reloading == 10) {
+            EquipWeapon(primaryWeapon);
+        }
+
+        reloading += 1;
     }
 
     public PlayerWeapon GetCurrentWeapon() {
@@ -42,6 +69,12 @@ public class WeaponManager : NetworkBehaviour {
     }
 
     void EquipWeapon(PlayerWeapon _weapon) {
+
+        foreach (Transform child in weaponHolder)
+        {
+            Destroy(child.gameObject);
+        }
+
         currentWeapon = _weapon;
 
         GameObject _weaponIns = (GameObject)Instantiate(_weapon.graphics, weaponHolder.position, weaponHolder.rotation);
@@ -58,6 +91,12 @@ public class WeaponManager : NetworkBehaviour {
         if (isLocalPlayer) {
             Util.SetLayerRecursively(_weaponIns, LayerMask.NameToLayer(weaponLayerName));
             Util.SetLayerRecursively(_firePoint, LayerMask.NameToLayer(weaponLayerName));
+        }
+    }
+
+    void SwitchWeapon() {
+        if (reloading > 50) {
+            reloading = 0;
         }
     }
 
