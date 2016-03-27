@@ -43,6 +43,8 @@ public class Player : NetworkBehaviour {
     [SerializeField]
     private PlayerShoot shoot;
 
+    public GameObject ding;
+
     public void Setup () {
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < wasEnabled.Length; i++) {
@@ -66,6 +68,14 @@ public class Player : NetworkBehaviour {
     public void RpcTakeDamage(int _amount) {
         if (isDead)
             return;
+
+        AudioSource _dingSound = (AudioSource)Instantiate(
+           ding.GetComponent<AudioSource>(),
+           cam.transform.position,
+           new Quaternion(0, 0, 0, 0)
+       );
+        _dingSound.Play();
+        Destroy(_dingSound.gameObject, 1f);
 
         currentHealth -= _amount;
 

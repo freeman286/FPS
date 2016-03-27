@@ -17,7 +17,7 @@ public class PlayerShoot : NetworkBehaviour {
 
     private Rigidbody rb;
 
-    private AudioSource shootSound;
+    private GameObject shootSound;
 
     void Start() {
         if (cam == null)
