@@ -59,7 +59,6 @@ public class Player : NetworkBehaviour {
         healthRegen += 1;
         if (healthRegen > 300 && currentHealth < 100) {
             currentHealth += 1;
-            Debug.Log(transform.name + " now has " + currentHealth + " health.");
         }
     }
 
@@ -71,8 +70,6 @@ public class Player : NetworkBehaviour {
         currentHealth -= _amount;
 
         healthRegen = 0;
-
-        Debug.Log(transform.name + " now has " + currentHealth + " health.");
 
         if (currentHealth <= 0) {
             Die();
@@ -107,8 +104,6 @@ public class Player : NetworkBehaviour {
             _col.enabled = false;
         }
 
-        Debug.Log(transform.name + " is Dead!");
-
         StartCoroutine(Respawn());
 
     }
@@ -129,9 +124,6 @@ public class Player : NetworkBehaviour {
         }
 
         rigidbodyOnDeath[4].transform.rotation = cam.transform.rotation;
-
-
-        Debug.Log(transform.name + " Respawned");
 
     }
 
