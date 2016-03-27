@@ -48,7 +48,7 @@ public class WeaponManager : NetworkBehaviour {
         _weaponIns.transform.SetParent(weaponHolder);
         GameObject _firePoint = (GameObject)Instantiate(_weapon.firePoint, weaponHolder.position, weaponHolder.rotation);
         _firePoint.transform.SetParent(weaponHolder);
-
+        
         currentGraphics = _weapon.GetComponent<WeaponGraphics>();
         currentFirePoint = _firePoint;
         if (currentGraphics == null) {
@@ -57,6 +57,7 @@ public class WeaponManager : NetworkBehaviour {
 
         if (isLocalPlayer) {
             Util.SetLayerRecursively(_weaponIns, LayerMask.NameToLayer(weaponLayerName));
+            Util.SetLayerRecursively(_firePoint, LayerMask.NameToLayer(weaponLayerName));
         }
     }
 
