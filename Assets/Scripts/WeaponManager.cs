@@ -10,6 +10,9 @@ public class WeaponManager : NetworkBehaviour {
     private Transform weaponHolder;
 
     [SerializeField]
+    private PlayerShoot shoot;
+
+    [SerializeField]
     private PlayerWeapon primaryWeapon;
 
     [SerializeField]
@@ -95,6 +98,7 @@ public class WeaponManager : NetworkBehaviour {
     }
 
     void SwitchWeapon() {
+        shoot.CancelInvoke("Shoot");
         if (reloading > 50) {
             reloading = 0;
         }
