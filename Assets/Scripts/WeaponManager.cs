@@ -26,6 +26,7 @@ public class WeaponManager : NetworkBehaviour {
 
     private GameObject currentFirePoint;
 
+    [SyncVar]
     private int reloading = 100;
 
     void Start () {
@@ -33,26 +34,14 @@ public class WeaponManager : NetworkBehaviour {
         Debug.Log(primaryWeapon.graphics);
     }
 
+    
     void Update() {
         if (Input.GetKeyDown(KeyCode.Q)) {
             SwitchWeapon();
         }
-        if (reloading < 10) {
-            weaponHolder.transform.Rotate(3, 0, 0 * Time.deltaTime);
-        } else if (reloading < 20) {
-            weaponHolder.transform.Rotate(-3, 0, 0 * Time.deltaTime);
-        } else {
-            weaponHolder.transform.Rotate(0, 0, 0);
-        }
 
-
-        if (currentWeapon == primaryWeapon && reloading == 10) {
-            EquipWeapon(secondaryWeapon);
-        } else if (reloading == 10) {
-            EquipWeapon(primaryWeapon);
-        }
-
-        reloading += 1;
+        SwitchingWeapons();
+        
     }
 
     public PlayerWeapon GetCurrentWeapon() {
@@ -71,6 +60,7 @@ public class WeaponManager : NetworkBehaviour {
         return currentWeapon.shootSound;
     }
 
+    [Client]
     void EquipWeapon(PlayerWeapon _weapon) {
 
         foreach (Transform child in weaponHolder)
@@ -97,11 +87,45 @@ public class WeaponManager : NetworkBehaviour {
         }
     }
 
+    [Client]
     void SwitchWeapon() {
+        if (!isLocalPlayer) {
+            return;
+        }
         shoot.CancelInvoke("Shoot");
         if (reloading > 50) {
             reloading = 0;
         }
     }
 
+    [Client]
+    void SwitchingWeapons() {
+        if (!isLocalPlayer) {
+            return;
+        }
+
+        if (reloading < 10)
+        {
+            weaponHolder.transform.Rotate(3, 0, 0 * Time.deltaTime);
+        }
+        else if (reloading < 20)
+        {
+            weaponHolder.transform.Rotate(-3, 0, 0 * Time.deltaTime);
+        }
+        else {
+            weaponHolder.transform.Rotate(0, 0, 0);
+        }
+
+
+        if (currentWeapon == primaryWeapon && reloading == 10)
+        {
+            EquipWeapon(secondaryWeapon);
+        }
+        else if (reloading == 10)
+        {
+            EquipWeapon(primaryWeapon);
+        }
+
+        reloading += 1;
+    }
 }
