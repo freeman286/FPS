@@ -8,6 +8,8 @@ public class PlayerWeapon : MonoBehaviour{
 
     public float fireRate;
     public float spread;
+    public float spreadWhileMoving;
+    public float spreadWhileJumping;
 
     public GameObject graphics;
     public GameObject shootSound;

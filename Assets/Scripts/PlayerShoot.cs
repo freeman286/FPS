@@ -21,6 +21,9 @@ public class PlayerShoot : NetworkBehaviour {
 
     private int shootCooldown = 100;
 
+    [SerializeField]
+    private PlayerMotor motor;
+
     void Start() {
         if (cam == null)
         {
@@ -88,10 +91,20 @@ public class PlayerShoot : NetworkBehaviour {
 
         CmdOnShoot();
 
+        float _devience;
+
+        if (!motor.IsGrounded()) {
+            _devience = currentWeapon.spreadWhileJumping;
+        } else if (motor.IsMoving()) {
+            _devience = currentWeapon.spreadWhileMoving;
+        } else {
+            _devience = currentWeapon.spread;
+        }
+
         RaycastHit _hit;
         Vector3 _spread = new Vector3(
-            Random.Range(-currentWeapon.spread, currentWeapon.spread),
-            Random.Range(-currentWeapon.spread, currentWeapon.spread),
+            Random.Range(-_devience, _devience),
+            Random.Range(-_devience, _devience),
             0);
         if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask))
         {

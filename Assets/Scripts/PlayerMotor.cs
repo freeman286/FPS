@@ -70,4 +70,12 @@ public class PlayerMotor : MonoBehaviour {
             isGrounded = true;     
         } 
     }
+
+    public bool IsGrounded () {
+        return isGrounded;
+    }
+
+    public bool IsMoving() {
+        return rb.velocity.magnitude > 1;
+    }
 }
