@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class WeaponManager : NetworkBehaviour {
+public class WeaponManager : NetworkBehaviour
+{
 
     [SerializeField]
     private string weaponLayerName = "Weapon";
@@ -29,42 +30,65 @@ public class WeaponManager : NetworkBehaviour {
     [SerializeField]
     private GameObject weaponSwapSound;
 
+    private int primaryMagsize;
+
+    private int secondaryMagsize;
+
     [SyncVar]
+    private int swapping = 100;
+
     private int reloading = 100;
 
-    void Start () {
+    void Start()
+    {
         EquipWeapon(primaryWeapon);
-        Debug.Log(primaryWeapon.graphics);
+        primaryMagsize = primaryWeapon.magSize;
+        secondaryMagsize = secondaryWeapon.magSize;
     }
 
-    
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Q)) {
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
             SwitchWeapon();
         }
 
+        if ((Input.GetKeyDown(KeyCode.R) || primaryMagsize == 0 || secondaryMagsize == 0) && reloading > 150)
+        {
+            Reload();
+        }
+
         SwitchingWeapons();
-        
+        Reloading();
+        reloading += 1;
+
     }
 
-    public PlayerWeapon GetCurrentWeapon() {
+    public PlayerWeapon GetCurrentWeapon()
+    {
         return currentWeapon;
     }
 
-    public WeaponGraphics GetCurrentGraphics() {
+    public WeaponGraphics GetCurrentGraphics()
+    {
         return currentGraphics;
     }
 
-    public GameObject GetCurrentFirePoint() {
+    public GameObject GetCurrentFirePoint()
+    {
         return currentFirePoint;
     }
 
-    public GameObject GetcurrentShootSound() {
+    public GameObject GetcurrentShootSound()
+    {
         return currentWeapon.shootSound;
     }
 
+
     [Client]
-    void EquipWeapon(PlayerWeapon _weapon) {
+    void EquipWeapon(PlayerWeapon _weapon)
+    {
 
         foreach (Transform child in weaponHolder)
         {
@@ -77,57 +101,69 @@ public class WeaponManager : NetworkBehaviour {
         _weaponIns.transform.SetParent(weaponHolder);
         GameObject _firePoint = (GameObject)Instantiate(_weapon.firePoint, weaponHolder.position, weaponHolder.rotation);
         _firePoint.transform.SetParent(weaponHolder);
-        
+
         currentGraphics = _weapon.GetComponent<WeaponGraphics>();
         currentFirePoint = _firePoint;
-        if (currentGraphics == null) {
+        if (currentGraphics == null)
+        {
             Debug.LogError("No WeaponGraphics for weapon " + _weaponIns.name);
         }
 
-        if (isLocalPlayer) {
+        if (isLocalPlayer)
+        {
             Util.SetLayerRecursively(_weaponIns, LayerMask.NameToLayer(weaponLayerName));
             Util.SetLayerRecursively(_firePoint, LayerMask.NameToLayer(weaponLayerName));
         }
     }
 
     [Client]
-    void SwitchWeapon() {
-        if (!isLocalPlayer) {
+    void SwitchWeapon()
+    {
+        if (!isLocalPlayer)
+        {
             return;
         }
         shoot.CancelInvoke("Shoot");
-        if (reloading > 50) {
-            reloading = 0;
+        if (swapping > 50)
+        {
+            swapping = 0;
         }
     }
 
     [Client]
-    void SwitchingWeapons() {
-        if (!isLocalPlayer) {
+    void SwitchingWeapons()
+    {
+        if (!isLocalPlayer)
+        {
             return;
         }
 
-        if (reloading < 10) {
+        if (swapping < 10)
+        {
             weaponHolder.transform.Rotate(3, 0, 0 * Time.deltaTime);
-        } else if (reloading < 20) {
+        }
+        else if (swapping < 20)
+        {
             weaponHolder.transform.Rotate(-3, 0, 0 * Time.deltaTime);
-        } else {
-            weaponHolder.transform.Rotate(0, 0, 0);
         }
 
 
-        if (currentWeapon == primaryWeapon && reloading == 10) {
+        if (currentWeapon == primaryWeapon && swapping == 10)
+        {
             EquipWeapon(secondaryWeapon);
             PlayWeaponSwapSound();
-        } else if (reloading == 10) {
+        }
+        else if (swapping == 10)
+        {
             EquipWeapon(primaryWeapon);
             PlayWeaponSwapSound();
         }
 
-        reloading += 1;
+        swapping += 1;
     }
 
-    void PlayWeaponSwapSound () {
+    void PlayWeaponSwapSound()
+    {
         AudioSource _weaponSwapSound = (AudioSource)Instantiate(
                 weaponSwapSound.GetComponent<AudioSource>(),
                 gameObject.transform.position,
@@ -135,5 +171,79 @@ public class WeaponManager : NetworkBehaviour {
             );
         _weaponSwapSound.Play();
         Destroy(_weaponSwapSound.gameObject, 1f);
+    }
+
+    public bool Swapping()
+    {
+        return swapping < 20;
+    }
+
+    [Client]
+    void Reload()
+    {
+
+
+        shoot.CancelInvoke("Shoot");
+        if (reloading > 50)
+        {
+            reloading = 0;
+        }
+
+
+    }
+
+    [Client]
+    void Reloading()
+    {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        if (currentWeapon == primaryWeapon && primaryMagsize != primaryWeapon.magSize && reloading == primaryWeapon.reloadTime)
+        {
+            primaryMagsize = primaryWeapon.magSize;
+        }
+        if (currentWeapon == secondaryWeapon && secondaryMagsize != secondaryWeapon.magSize && reloading == secondaryWeapon.reloadTime)
+        {
+            secondaryMagsize = secondaryWeapon.magSize;
+        }
+
+        if (reloading < currentWeapon.reloadTime / 2)
+        {
+            weaponHolder.transform.Rotate(1, 0, 0 * Time.deltaTime);
+        }
+        else if (reloading < currentWeapon.reloadTime)
+        {
+            weaponHolder.transform.Rotate(-1, 0, 0 * Time.deltaTime);
+        }
+    }
+
+    public void Shooting()
+    {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        if (currentWeapon == primaryWeapon)
+        {
+            primaryMagsize -= 1;
+        }
+        else {
+            secondaryMagsize -= 1;
+        }
+
+    }
+
+    public bool CanShoot()
+    {
+        return ((currentWeapon == primaryWeapon && primaryMagsize != 0) || (currentWeapon == secondaryWeapon && secondaryMagsize != 0)) &&
+               ((currentWeapon == primaryWeapon && reloading > primaryWeapon.reloadTime) || (currentWeapon == secondaryWeapon && reloading > secondaryWeapon.reloadTime));
+    }
+
+    public bool IsReloading()
+    {
+        return reloading <= currentWeapon.reloadTime;
     }
 }

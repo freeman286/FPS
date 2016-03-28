@@ -24,6 +24,11 @@ public class PlayerShoot : NetworkBehaviour {
     [SerializeField]
     private PlayerMotor motor;
 
+    [SerializeField]
+    private Transform weaponHolder;
+
+    private int shooting = 100;
+
     void Start() {
         if (cam == null)
         {
@@ -37,7 +42,7 @@ public class PlayerShoot : NetworkBehaviour {
     void Update() {
         currentWeapon = weaponManager.GetCurrentWeapon();
         shootCooldown += 1;
-        if (currentWeapon.fireRate <= 0 && shootCooldown > 50) {
+        if (currentWeapon.fireRate <= 0 && shootCooldown > currentWeapon.shootCooldown) {
             if (Input.GetButtonDown("Fire1")) {
                 Shoot();
                 shootCooldown = 0;
@@ -51,6 +56,16 @@ public class PlayerShoot : NetworkBehaviour {
                 CancelInvoke("Shoot");
             }
         }
+
+        if (shooting < currentWeapon.shootCooldown / 6) {
+            weaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
+        } else if (shooting < currentWeapon.shootCooldown) {
+            weaponHolder.transform.Rotate(0.33333333333f, 0, 0 * Time.deltaTime);
+        } else if (!weaponManager.Swapping() && !weaponManager.IsReloading()) {
+            weaponHolder.transform.rotation = cam.transform.rotation;
+        }
+
+        shooting += 1;
     }
 
     [Command]
@@ -85,9 +100,13 @@ public class PlayerShoot : NetworkBehaviour {
     void Shoot() {
 
 
-        if (!isLocalPlayer) {
+        if (!isLocalPlayer || !weaponManager.CanShoot() || weaponManager.IsReloading()) {
             return;
         }
+
+        weaponManager.Shooting();
+
+        shooting = 0;
 
         CmdOnShoot();
 
