@@ -69,13 +69,16 @@ public class Player : NetworkBehaviour {
         if (isDead)
             return;
 
-        AudioSource _dingSound = (AudioSource)Instantiate(
-           ding.GetComponent<AudioSource>(),
-           cam.transform.position,
-           new Quaternion(0, 0, 0, 0)
-       );
-        _dingSound.Play();
-        Destroy(_dingSound.gameObject, 1f);
+        if (isLocalPlayer) {
+            AudioSource _dingSound = (AudioSource)Instantiate(
+                ding.GetComponent<AudioSource>(),
+                cam.transform.position,
+                new Quaternion(0, 0, 0, 0)
+            );
+            _dingSound.Play();
+            Destroy(_dingSound.gameObject, 1f);
+        }
+        
 
         currentHealth -= _amount;
 
