@@ -7,6 +7,7 @@ public class PlayerWeapon : MonoBehaviour{
     public int range;
     public int magSize;
     public int reloadTime;
+    public int roundsPerShot;
 
     public float fireRate;
     public float spread;
