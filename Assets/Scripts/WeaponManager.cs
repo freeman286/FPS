@@ -30,6 +30,9 @@ public class WeaponManager : NetworkBehaviour
     [SerializeField]
     private GameObject weaponSwapSound;
 
+    [SerializeField]
+    private GameObject reloadSound;
+
     private int primaryMagsize;
 
     private int secondaryMagsize;
@@ -162,8 +165,7 @@ public class WeaponManager : NetworkBehaviour
         swapping += 1;
     }
 
-    void PlayWeaponSwapSound()
-    {
+    void PlayWeaponSwapSound() {
         AudioSource _weaponSwapSound = (AudioSource)Instantiate(
                 weaponSwapSound.GetComponent<AudioSource>(),
                 gameObject.transform.position,
@@ -200,13 +202,13 @@ public class WeaponManager : NetworkBehaviour
             return;
         }
 
-        if (currentWeapon == primaryWeapon && primaryMagsize != primaryWeapon.magSize && reloading == primaryWeapon.reloadTime)
-        {
+        if (currentWeapon == primaryWeapon && primaryMagsize != primaryWeapon.magSize && reloading == primaryWeapon.reloadTime) {
             primaryMagsize = primaryWeapon.magSize;
+            PlayReloadSound();
         }
-        if (currentWeapon == secondaryWeapon && secondaryMagsize != secondaryWeapon.magSize && reloading == secondaryWeapon.reloadTime)
-        {
+        if (currentWeapon == secondaryWeapon && secondaryMagsize != secondaryWeapon.magSize && reloading == secondaryWeapon.reloadTime) {
             secondaryMagsize = secondaryWeapon.magSize;
+            PlayReloadSound();
         }
 
         if (reloading < currentWeapon.reloadTime / 2)
@@ -245,5 +247,15 @@ public class WeaponManager : NetworkBehaviour
     public bool IsReloading()
     {
         return reloading <= currentWeapon.reloadTime;
+    }
+
+    void PlayReloadSound() {
+        AudioSource _reloadSound = (AudioSource)Instantiate(
+                reloadSound.GetComponent<AudioSource>(),
+                gameObject.transform.position,
+                new Quaternion(0, 0, 0, 0)
+            );
+        _reloadSound.Play();
+        Destroy(_reloadSound.gameObject, 1f);
     }
 }
