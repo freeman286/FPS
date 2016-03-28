@@ -37,8 +37,7 @@ public class WeaponManager : NetworkBehaviour
 
     private int secondaryMagsize;
 
-    [SyncVar]
-    private int swapping = 100;
+    private int swapping = 20;
 
     private int reloading = 100;
 
@@ -61,6 +60,7 @@ public class WeaponManager : NetworkBehaviour
             Reload();
         }
 
+        swapping += 1;
         SwitchingWeapons();
         Reloading();
         reloading += 1;
@@ -89,8 +89,7 @@ public class WeaponManager : NetworkBehaviour
 
 
     [Client]
-    void EquipWeapon(PlayerWeapon _weapon)
-    {
+    void EquipWeapon(PlayerWeapon _weapon) {    
 
         foreach (Transform child in weaponHolder)
         {
@@ -111,20 +110,14 @@ public class WeaponManager : NetworkBehaviour
             Debug.LogError("No WeaponGraphics for weapon " + _weaponIns.name);
         }
 
-        if (isLocalPlayer)
-        {
+        if (isLocalPlayer) {
             Util.SetLayerRecursively(_weaponIns, LayerMask.NameToLayer(weaponLayerName));
             Util.SetLayerRecursively(_firePoint, LayerMask.NameToLayer(weaponLayerName));
         }
     }
 
     [Client]
-    void SwitchWeapon()
-    {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
+    void SwitchWeapon() {
         shoot.CancelInvoke("Shoot");
         if (swapping > 50)
         {
@@ -132,12 +125,20 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
-    [Client]
-    void SwitchingWeapons()
-    {
-        if (!isLocalPlayer)
-        {
+    void SwitchingWeapons() {
+
+        if (swapping == 10) {
+            CmdSwitchingWeapons(true);
+            PlayWeaponSwapSound();
+        }
+
+        if (!isLocalPlayer) {
+            if (swapping == 10)
+            {
+                CmdSwitchingWeapons(true);
+            }
             return;
+
         }
 
         if (swapping < 10)
@@ -149,19 +150,25 @@ public class WeaponManager : NetworkBehaviour
             weaponHolder.transform.Rotate(-3, 0, 0 * Time.deltaTime);
         }
 
+    }
 
-        if (currentWeapon == primaryWeapon && swapping == 10)
+    [Command]
+    void CmdSwitchingWeapons(bool _toggle) {
+        
+        RpcRemoteSwitchingWeapons(_toggle);
+    }
+
+    [ClientRpc]
+    void RpcRemoteSwitchingWeapons(bool _toggle) {
+
+        if (currentWeapon == primaryWeapon)
         {
             EquipWeapon(secondaryWeapon);
-            PlayWeaponSwapSound();
         }
-        else if (swapping == 10)
-        {
+        else {
             EquipWeapon(primaryWeapon);
-            PlayWeaponSwapSound();
         }
 
-        swapping += 1;
     }
 
     void PlayWeaponSwapSound() {
