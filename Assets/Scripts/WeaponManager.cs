@@ -52,8 +52,7 @@ public class WeaponManager : NetworkBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
+        if (Input.GetKeyDown(KeyCode.Q) && !IsReloading()) {
             SwitchWeapon();
         }
 
@@ -175,8 +174,7 @@ public class WeaponManager : NetworkBehaviour
         Destroy(_weaponSwapSound.gameObject, 1f);
     }
 
-    public bool Swapping()
-    {
+    public bool Swapping() {
         return swapping < 20;
     }
 
@@ -244,8 +242,7 @@ public class WeaponManager : NetworkBehaviour
                ((currentWeapon == primaryWeapon && reloading > primaryWeapon.reloadTime) || (currentWeapon == secondaryWeapon && reloading > secondaryWeapon.reloadTime));
     }
 
-    public bool IsReloading()
-    {
+    public bool IsReloading() {
         return reloading <= currentWeapon.reloadTime;
     }
 
