@@ -13,11 +13,9 @@ public class WeaponManager : NetworkBehaviour
     [SerializeField]
     private PlayerShoot shoot;
 
-    [SerializeField]
-    private PlayerWeapon primaryWeapon;
+    public PlayerWeapon primaryWeapon;
 
-    [SerializeField]
-    private PlayerWeapon secondaryWeapon;
+    public PlayerWeapon secondaryWeapon;
 
     private PlayerWeapon currentWeapon;
 
@@ -41,8 +39,14 @@ public class WeaponManager : NetworkBehaviour
 
     private int reloading = 100;
 
-    void Start()
-    {
+    void Awake () {
+        primaryWeapon = Camera.main.GetComponent<Loadout>().GetPrimaryWeapon();
+        secondaryWeapon = Camera.main.GetComponent<Loadout>().GetSecondaryWeapon();
+    }
+
+
+
+    void Start()  {
         EquipWeapon(primaryWeapon);
         FillMags();
     }
