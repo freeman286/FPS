@@ -76,7 +76,6 @@ public class PlayerMotor : MonoBehaviour {
     }
 
     public bool IsMoving() {
-
-        return rb.velocity.magnitude > 0.00001f;
+        return rb.velocity.magnitude * 10000 > 1;
     }
 }
