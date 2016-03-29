@@ -19,4 +19,6 @@ public class PlayerWeapon : MonoBehaviour{
     public GameObject graphics;
     public GameObject shootSound;
     public GameObject firePoint;
+
+    public bool primary;
 }

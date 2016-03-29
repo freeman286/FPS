@@ -17,8 +17,6 @@ public class PlayerSetup : NetworkBehaviour {
     [SerializeField]
     GameObject playerGraphics;
 
-    
-
 
     void Start () {
         if (!isLocalPlayer) {
