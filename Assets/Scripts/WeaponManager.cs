@@ -44,6 +44,10 @@ public class WeaponManager : NetworkBehaviour
     void Start()
     {
         EquipWeapon(primaryWeapon);
+        FillMags();
+    }
+
+    public void FillMags() {
         primaryMagsize = primaryWeapon.magSize;
         secondaryMagsize = secondaryWeapon.magSize;
     }
