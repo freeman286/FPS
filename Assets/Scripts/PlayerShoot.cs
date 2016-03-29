@@ -120,8 +120,6 @@ public class PlayerShoot : NetworkBehaviour {
             _devience = currentWeapon.spread;
         }
 
-        Debug.Log(_devience);
-
 
         for (int i = 0; i < currentWeapon.roundsPerShot; i++) {
             RaycastHit _hit;
