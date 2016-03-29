@@ -120,6 +120,7 @@ public class PlayerShoot : NetworkBehaviour {
             _devience = currentWeapon.spread;
         }
 
+
         for (int i = 0; i < currentWeapon.roundsPerShot; i++) {
             RaycastHit _hit;
             Vector3 _spread = new Vector3(
