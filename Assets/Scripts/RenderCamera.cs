@@ -14,8 +14,12 @@ public class RenderCamera : MonoBehaviour {
 
     void OnPostRender () {
 
-        renderedTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        if (Time.frameCount % 3 == 0) {
+            renderedTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
 
-        renderedTexture.Apply();
+            renderedTexture.Apply();
+        }
+
+        
     }
 }
