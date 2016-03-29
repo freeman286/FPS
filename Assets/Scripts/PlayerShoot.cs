@@ -69,16 +69,16 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     [Command]
-    void CmdOnShoot () {
-        RpcDoShootEffect();
+    void CmdOnShoot (Vector3 _pos) {
+        RpcDoShootEffect(_pos);
     }
 
     [ClientRpc]
-    void RpcDoShootEffect () {
+    void RpcDoShootEffect(Vector3 _pos) {
         weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
         AudioSource _shootSound = (AudioSource)Instantiate(
             weaponManager.GetcurrentShootSound().GetComponent<AudioSource>(),
-            cam.transform.position,
+            _pos,
             new Quaternion(0, 0, 0, 0)
         );
         _shootSound.Play();
@@ -108,7 +108,7 @@ public class PlayerShoot : NetworkBehaviour {
 
         shooting = 0;
 
-        CmdOnShoot();
+        CmdOnShoot(cam.transform.position);
 
         float _devience;
 
