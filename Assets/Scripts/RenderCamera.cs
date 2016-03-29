@@ -8,18 +8,24 @@ public class RenderCamera : NetworkBehaviour   {
 
     public Material mat;
 
-    void Awake() {
-        renderedTexture = new Texture2D(Screen.width, Screen.height);
-        mat.mainTexture = renderedTexture;
+    public WeaponManager weaponManager;
+
+    void Start() {
+        if (weaponManager.GetCurrentWeapon().name == "sniper") {
+            renderedTexture = new Texture2D(Screen.width, Screen.height);
+            mat.mainTexture = renderedTexture;
+        }
     }
 
     void OnPostRender () {
-        if (Time.frameCount % 4 == 0) {
+
+        if (weaponManager.GetCurrentWeapon().name == "sniper") {
+
             renderedTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
 
             renderedTexture.Apply();
-        }
 
+        }
         
     }
 }
