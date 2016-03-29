@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\PlayerSetup.cs" />
     <Compile Include="Assets\Scripts\PlayerShoot.cs" />
     <Compile Include="Assets\Scripts\PlayerWeapon.cs" />
+    <Compile Include="Assets\Scripts\RenderCamera.cs" />
     <Compile Include="Assets\Scripts\SpawnBlocks.cs" />
     <Compile Include="Assets\Scripts\Util.cs" />
     <Compile Include="Assets\Scripts\WeaponGraphics.cs" />
