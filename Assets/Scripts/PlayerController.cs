@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        walking.Play("Walking");
     }
 
 
@@ -94,5 +93,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Jump")) {
             motor.Jump();
         }
+    }
+
+    public void Reset() {
+        walking.Play("Walking");
     }
 }

@@ -46,6 +46,9 @@ public class Player : NetworkBehaviour {
     [SerializeField]
     private WeaponManager weapons;
 
+    [SerializeField]
+    private PlayerController controller;
+
     public GameObject ding;
 
     public void Setup () {
@@ -150,6 +153,7 @@ public class Player : NetworkBehaviour {
         cam.transform.parent = gameObject.transform;
 
         weapons.FillMags();
+        controller.Reset();
 
         currentHealth = maxHealth;
 
