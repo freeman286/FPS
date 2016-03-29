@@ -100,7 +100,7 @@ public class PlayerShoot : NetworkBehaviour {
     void Shoot() {
 
 
-        if (!isLocalPlayer || !weaponManager.CanShoot() || weaponManager.IsReloading()) {
+        if (!isLocalPlayer || !weaponManager.CanShoot()) {
             return;
         }
 

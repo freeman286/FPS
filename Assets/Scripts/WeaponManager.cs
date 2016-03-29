@@ -250,7 +250,9 @@ public class WeaponManager : NetworkBehaviour
     public bool CanShoot()
     {
         return ((currentWeapon == primaryWeapon && primaryMagsize != 0) || (currentWeapon == secondaryWeapon && secondaryMagsize != 0)) &&
-               ((currentWeapon == primaryWeapon && reloading > primaryWeapon.reloadTime) || (currentWeapon == secondaryWeapon && reloading > secondaryWeapon.reloadTime));
+               ((currentWeapon == primaryWeapon && reloading > primaryWeapon.reloadTime) || (currentWeapon == secondaryWeapon && reloading > secondaryWeapon.reloadTime) &&
+               !IsReloading() &&
+               !Swapping());
     }
 
     public bool IsReloading() {
