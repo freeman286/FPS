@@ -18,7 +18,7 @@ public class SpawnBlocks : NetworkBehaviour {
 
 
     void GenerateBlocks()  {
-        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Year;
+        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
         
         maxBlocks = Random.Range(30, 50);
         while (currentBlocks <= maxBlocks) {

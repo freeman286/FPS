@@ -45,7 +45,7 @@ public class WeaponManager : NetworkBehaviour
 
     void Awake () {
 
-        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Year;
+        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
 
         primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
         while (!primaryWeapon.primary) {
