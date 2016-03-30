@@ -14,7 +14,7 @@ public class PlayerWeapon : MonoBehaviour{
     public float spreadWhileMoving;
     public float spreadWhileJumping;
 
-    public int shootCooldown;
+    public float shootCooldown;
 
     public GameObject graphics;
     public GameObject shootSound;

@@ -39,17 +39,32 @@ public class WeaponManager : NetworkBehaviour
 
     private int reloading = 100;
 
-    void Awake () {
-        primaryWeapon = Camera.main.GetComponent<Loadout>().GetPrimaryWeapon();
-        secondaryWeapon = Camera.main.GetComponent<Loadout>().GetSecondaryWeapon();
-    }
+    public PlayerWeapon[] allWeapons;
 
+    public Player player;
+
+    void Awake () {
+
+        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Year;
+
+        primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+        while (!primaryWeapon.primary) {
+            primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+        }
+        secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+        while (secondaryWeapon.primary) {
+            secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+        }
+    }
 
 
     void Start()  {
         EquipWeapon(primaryWeapon);
         FillMags();
+        
     }
+
+            
 
     public void FillMags() {
         primaryMagsize = primaryWeapon.magSize;
@@ -57,8 +72,7 @@ public class WeaponManager : NetworkBehaviour
     }
 
 
-    void Update()
-    {
+    void Update() {
         if (Input.GetKeyDown(KeyCode.Q) && !IsReloading()) {
             SwitchWeapon();
         }
@@ -72,11 +86,9 @@ public class WeaponManager : NetworkBehaviour
         SwitchingWeapons();
         Reloading();
         reloading += 1;
-
     }
 
-    public PlayerWeapon GetCurrentWeapon()
-    {
+    public PlayerWeapon GetCurrentWeapon() {
         return currentWeapon;
     }
 
