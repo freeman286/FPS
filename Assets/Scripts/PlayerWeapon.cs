@@ -16,9 +16,13 @@ public class PlayerWeapon : MonoBehaviour{
 
     public float shootCooldown;
 
+    public bool projectileWeapon;
+    public float throwPower;
+
     public GameObject graphics;
     public GameObject shootSound;
     public GameObject firePoint;
+    public GameObject projectile;
 
     public bool primary;
 }

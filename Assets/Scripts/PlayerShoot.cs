@@ -120,41 +120,48 @@ public class PlayerShoot : NetworkBehaviour {
             _devience = currentWeapon.spread;
         }
 
-
-        for (int i = 0; i < currentWeapon.roundsPerShot; i++) {
-            RaycastHit _hit;
-            Vector3 _spread = new Vector3(
+        Vector3 _spread = new Vector3(
                 Random.Range(-_devience, _devience),
                 Random.Range(-_devience, _devience),
                 0);
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask))
-            {
-                if (_hit.collider.tag == "Player")
+
+        if (currentWeapon.projectileWeapon) {
+
+            GameObject _projectile = (GameObject)Instantiate(currentWeapon.projectile, transform.position, transform.rotation);
+            _projectile.GetComponent<Rigidbody>().velocity = cam.transform.forward * currentWeapon.throwPower;
+
+        } else {
+
+            for (int i = 0; i < currentWeapon.roundsPerShot; i++) {
+                RaycastHit _hit;
+
+                if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask))
                 {
-
-                    string[] crits = { "Skull", "RightEye", "LeftEye" };
-
-                    int _damage = currentWeapon.damage;
-
-                    if (crits.Contains(_hit.collider.name))
+                    if (_hit.collider.tag == "Player")
                     {
-                        _damage *= 3;
+
+                        string[] crits = { "Skull", "RightEye", "LeftEye" };
+
+                        int _damage = currentWeapon.damage;
+
+                        if (crits.Contains(_hit.collider.name)) {
+                            _damage *= 3;
+                        }
+
+                        CmdPlayerShot(_hit.collider.transform.root.name, _damage);
                     }
 
-                    CmdPlayerShot(_hit.collider.transform.root.name, _damage);
+                    rb = _hit.collider.gameObject.GetComponent<Rigidbody>();
+
+                    if (rb != null)
+                    {
+                        rb.AddForce(transform.forward * 500f);
+                    }
+
+                    CmdOnHit(_hit.point, _hit.normal);
                 }
 
-                rb = _hit.collider.gameObject.GetComponent<Rigidbody>();
-
-                if (rb != null)
-                {
-                    rb.AddForce(transform.forward * 500f);
-                }
-
-                CmdOnHit(_hit.point, _hit.normal);
             }
-
-        
         }
 
     }
