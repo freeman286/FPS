@@ -73,8 +73,11 @@ public class Player : NetworkBehaviour {
         foreach (var _hit in hitColliders) {
             if (_hit.transform.root.tag == "Projectile")  {
                 if (_hit.transform.root.GetComponent<ProjectileController>().exploding) {
-                    Debug.Log("Hello");
-                    RpcTakeDamage(100);
+
+                    float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
+
+                    Debug.Log(Mathf.RoundToInt((5 - _dist) * 50));
+                    RpcTakeDamage(Mathf.RoundToInt((5 - _dist) * 50));
                 }
             }
         }

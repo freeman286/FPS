@@ -39,7 +39,7 @@ public class ProjectileController : NetworkBehaviour {
         exploding = true;
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(collision.contacts[0].normal));
         Destroy(_impact, 10f);
-        Destroy(gameObject, 0.1f);
+        Destroy(gameObject, Time.deltaTime);
         AudioSource _explosionSound = (AudioSource)Instantiate(
             explosionSound.GetComponent<AudioSource>(),
             transform.position,
