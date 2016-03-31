@@ -120,18 +120,28 @@ public class PlayerShoot : NetworkBehaviour {
             _devience = currentWeapon.spread;
         }
 
-        Vector3 _spread = new Vector3(
-                Random.Range(-_devience, _devience),
-                Random.Range(-_devience, _devience),
-                0);
+        
 
         if (currentWeapon.projectileWeapon) {
+
+            Vector3 _spread = new Vector3(
+                Random.Range(-_devience, _devience),
+                Random.Range(-_devience, _devience),
+                0
+            );
 
             CmdProjectileShot(transform.position, transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower);
 
         } else {
 
             for (int i = 0; i < currentWeapon.roundsPerShot; i++) {
+
+                Vector3 _spread = new Vector3(
+                    Random.Range(-_devience, _devience),
+                    Random.Range(-_devience, _devience),
+                    0
+                );
+
                 RaycastHit _hit;
 
                 if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask))
