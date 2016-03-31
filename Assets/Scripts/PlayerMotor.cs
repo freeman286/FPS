@@ -76,7 +76,6 @@ public class PlayerMotor : MonoBehaviour {
     }
 
     public bool IsMoving() {
-        Debug.Log(rb.velocity.magnitude * 10000);
-        return rb.velocity.magnitude * 10000 > 0.15;
+         return rb.velocity.magnitude * 10000 > 0.15f;
     }
 }
