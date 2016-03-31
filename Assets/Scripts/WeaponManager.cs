@@ -47,14 +47,14 @@ public class WeaponManager : NetworkBehaviour
 
         Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
 
-        primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+        primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         while (!primaryWeapon.primary) {
-            primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+            primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         }
 
-        secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+        secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         while (secondaryWeapon.primary) {
-            secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
+            secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         }
     }
 

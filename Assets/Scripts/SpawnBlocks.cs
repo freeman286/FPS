@@ -22,7 +22,7 @@ public class SpawnBlocks : NetworkBehaviour {
         
         maxBlocks = Random.Range(30, 50);
         while (currentBlocks <= maxBlocks) {
-            GameObject _block = blocks[Random.Range(0, blocks.Length - 1)];
+            GameObject _block = blocks[Random.Range(0, blocks.Length)];
             x = Random.Range(-28, 28);
             z = Random.Range(-28, 28);
             rot = Random.Range(0, 3) * 90;
