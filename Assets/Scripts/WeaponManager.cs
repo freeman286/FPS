@@ -51,9 +51,8 @@ public class WeaponManager : NetworkBehaviour
         while (!primaryWeapon.primary) {
             primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
         }
-        //secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
-        secondaryWeapon = allWeapons[7];
 
+        secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
         while (secondaryWeapon.primary) {
             secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length - 1)];
         }
@@ -94,9 +93,12 @@ public class WeaponManager : NetworkBehaviour
         return currentWeapon;
     }
 
-    public WeaponGraphics GetCurrentGraphics()
-    {
+    public WeaponGraphics GetCurrentGraphics() {
         return currentGraphics;
+    }
+
+    public GameObject GetCurrentProjectile() {
+        return currentWeapon.projectile;
     }
 
     public GameObject GetCurrentFirePoint()

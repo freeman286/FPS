@@ -8,7 +8,11 @@ public class ProjectileController : NetworkBehaviour {
 
     public GameObject impact;
 
+    public GameObject explosionSound;
+
     public PlayerShoot shoot;
+
+    public bool exploding = false;
 
     private int framesSinceCreated = 0;
 
@@ -32,24 +36,17 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
+        exploding = true;
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(collision.contacts[0].normal));
         Destroy(_impact, 10f);
-        Destroy(gameObject);
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 5);
-        foreach (var _hit in hitColliders)
-        {
-            if (_hit.transform.root.name.Contains("Player")) {
-                Debug.Log(_hit.transform.root.name);
-
-                CmdDamagedShot(_hit.transform.root.name, 100);
-            }
-        }
-    }
-
-    void CmdDamagedShot(string _playerID, int _damage)
-    {
-        Player _player = GameManager.GetPlayer(_playerID);
-        _player.RpcTakeDamage(_damage);
+        Destroy(gameObject, 0.1f);
+        AudioSource _explosionSound = (AudioSource)Instantiate(
+            explosionSound.GetComponent<AudioSource>(),
+            transform.position,
+            new Quaternion(0, 0, 0, 0)
+        );
+        _explosionSound.Play();
+        Destroy(_explosionSound.gameObject, 1f);
     }
 
 }

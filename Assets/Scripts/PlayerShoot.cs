@@ -114,7 +114,7 @@ public class PlayerShoot : NetworkBehaviour {
 
         if (!motor.IsGrounded()) {
             _devience = currentWeapon.spreadWhileJumping;
-        } else if (motor.IsMoving()) {
+        } else if (motor.IsMoving()) {  
             _devience = currentWeapon.spreadWhileMoving;
         } else {
             _devience = currentWeapon.spread;
@@ -127,8 +127,7 @@ public class PlayerShoot : NetworkBehaviour {
 
         if (currentWeapon.projectileWeapon) {
 
-            GameObject _projectile = (GameObject)Instantiate(currentWeapon.projectile, transform.position, transform.rotation);
-            _projectile.GetComponent<Rigidbody>().velocity = cam.transform.forward * currentWeapon.throwPower;
+            CmdProjectileShot(transform.position, transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower);
 
         } else {
 
@@ -170,5 +169,20 @@ public class PlayerShoot : NetworkBehaviour {
     void CmdPlayerShot (string _playerID, int _damage) {
         Player _player = GameManager.GetPlayer(_playerID);
         _player.RpcTakeDamage(_damage);
+    }
+
+    public void playerShot(string _playerID, int _damage) {
+        CmdPlayerShot(_playerID, _damage);
+    }
+
+    [Command]
+    void CmdProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel) {
+        RpcProjectileShot(_pos, _rot, _vel);
+    }
+
+    [ClientRpc]
+    void RpcProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel) {
+        GameObject _projectile = (GameObject)Instantiate(weaponManager.GetCurrentProjectile(), _pos, _rot);
+        _projectile.GetComponent<Rigidbody>().velocity = _vel;
     }
 }

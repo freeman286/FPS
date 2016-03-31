@@ -68,6 +68,16 @@ public class Player : NetworkBehaviour {
         if (healthRegen > 300 && currentHealth < 100) {
             currentHealth += 1;
         }
+
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 5);
+        foreach (var _hit in hitColliders) {
+            if (_hit.transform.root.tag == "Projectile")  {
+                if (_hit.transform.root.GetComponent<ProjectileController>().exploding) {
+                    Debug.Log("Hello");
+                    RpcTakeDamage(100);
+                }
+            }
+        }
     }
 
     [ClientRpc]
