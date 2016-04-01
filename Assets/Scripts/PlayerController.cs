@@ -50,8 +50,8 @@ public class PlayerController : MonoBehaviour
 
         //Speed Limit
 
-        if (rb.velocity.y > 8) {
-            rb.velocity = new Vector3(rb.velocity.x, 8, rb.velocity.z);
+        if (rb.velocity.y > 4) {
+            rb.velocity = new Vector3(rb.velocity.x, 4, rb.velocity.z);
         }
 
         //WASD movement
