@@ -48,6 +48,7 @@ public class WeaponManager : NetworkBehaviour
         Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
 
         primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
+        primaryWeapon = allWeapons[8];
         while (!primaryWeapon.primary) {
             primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         }

@@ -76,8 +76,8 @@ public class Player : NetworkBehaviour {
 
                     float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
-                    Debug.Log(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * 5));
-                    RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * 5));
+                    Debug.Log(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
+                    RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
                 }
             }
         }

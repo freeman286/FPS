@@ -12,21 +12,26 @@ public class ProjectileController : NetworkBehaviour {
 
     public PlayerShoot shoot;
 
+    public int damage;
+
     public bool exploding = false;
 
     private int framesSinceCreated = 0;
+
+    private Vector3 start;
 
 
     // Use this for initialization
     void Start() {
         collider.enabled = false;
+        start = transform.position;
     }
 
     // Update is called once per frame
     void Update() {
         framesSinceCreated += 1;
 
-        if (framesSinceCreated > 0) {
+        if (Vector3.Distance(transform.position, start) > 1) {
             collider.enabled = true;
         }
 
