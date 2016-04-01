@@ -31,7 +31,7 @@ public class ProjectileController : NetworkBehaviour {
     void Update() {
         framesSinceCreated += 1;
 
-        if (Vector3.Distance(transform.position, start) > 1) {
+        if (Vector3.Distance(transform.position, start) > 0.5f) {
             collider.enabled = true;
         }
 
