@@ -15,6 +15,8 @@ public class PlayerMotor : MonoBehaviour {
     [SerializeField]
     private float cameraRotationLimit = 50f;
 
+    private float jumpForce = 260f;
+
     private Rigidbody rb;
 
     public bool isGrounded = true;
@@ -42,7 +44,7 @@ public class PlayerMotor : MonoBehaviour {
 
     void PerformMovement() {
         if (velocity != Vector3.zero) {
-            rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + (rb.velocity + velocity) * Time.fixedDeltaTime);
         }
     }
 
@@ -60,7 +62,7 @@ public class PlayerMotor : MonoBehaviour {
 
     public void Jump() {
         if (isGrounded) {
-            rb.AddForce(Vector3.up * 350f);
+            rb.AddForce(Vector3.up * jumpForce);
             isGrounded = false;
         }
     }

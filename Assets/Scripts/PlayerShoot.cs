@@ -162,8 +162,7 @@ public class PlayerShoot : NetworkBehaviour {
 
                     rb = _hit.collider.gameObject.GetComponent<Rigidbody>();
 
-                    if (rb != null)
-                    {
+                    if (rb != null) {
                         rb.AddForce(transform.forward * 500f);
                     }
 
