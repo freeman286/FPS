@@ -36,8 +36,12 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
+        Explode(collision);
+    }
+
+    public void Explode (Collision _collision) {
         exploding = true;
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(collision.contacts[0].normal));
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
         Destroy(_impact, 10f);
         Destroy(gameObject, Time.deltaTime);
         AudioSource _explosionSound = (AudioSource)Instantiate(
@@ -48,5 +52,4 @@ public class ProjectileController : NetworkBehaviour {
         _explosionSound.Play();
         Destroy(_explosionSound.gameObject, 1f);
     }
-
 }

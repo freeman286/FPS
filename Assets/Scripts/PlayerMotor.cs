@@ -67,10 +67,10 @@ public class PlayerMotor : MonoBehaviour {
         }
     }
 
-    void OnCollisionEnter(Collision collisionInfo) {
-        if (collisionInfo.collider.tag == "Surface") {
+    void OnCollisionEnter(Collision collision) {
+        if (collision.collider.tag == "Surface") {
             isGrounded = true;     
-        } 
+        }
     }
 
     public bool IsGrounded () {

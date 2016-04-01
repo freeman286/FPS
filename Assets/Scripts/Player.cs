@@ -69,15 +69,15 @@ public class Player : NetworkBehaviour {
             currentHealth += 1;
         }
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 5);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
         foreach (var _hit in hitColliders) {
             if (_hit.transform.root.tag == "Projectile")  {
                 if (_hit.transform.root.GetComponent<ProjectileController>().exploding) {
 
                     float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
-                    Debug.Log(Mathf.RoundToInt((5 - _dist) * 50));
-                    RpcTakeDamage(Mathf.RoundToInt((5 - _dist) * 50));
+                    Debug.Log(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * 5));
+                    RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * 5));
                 }
             }
         }

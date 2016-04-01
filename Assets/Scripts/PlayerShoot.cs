@@ -160,12 +160,6 @@ public class PlayerShoot : NetworkBehaviour {
                         CmdPlayerShot(_hit.collider.transform.root.name, _damage);
                     }
 
-                    rb = _hit.collider.gameObject.GetComponent<Rigidbody>();
-
-                    if (rb != null) {
-                        rb.AddForce(transform.forward * 500f);
-                    }
-
                     CmdOnHit(_hit.point, _hit.normal);
                 }
 
