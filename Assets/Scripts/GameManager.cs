@@ -44,13 +44,15 @@ public class GameManager : MonoBehaviour {
         GUILayout.BeginArea(new Rect(10, 120, 200, 500));
         GUILayout.BeginVertical();
 
+        GUILayout.Label("My IP: " + Network.player.ipAddress);
+
+        GUILayout.Label("Frames per second:");
+        GUILayout.Label((1.0f / Time.deltaTime).ToString());
+
         GUILayout.Label("Players in game:");
         foreach (string _playerID in players.Keys) {
             GUILayout.Label(players[_playerID].transform.name);
         }
-
-        GUILayout.Label("Frames per second:");
-        GUILayout.Label((1.0f / Time.deltaTime).ToString());
 
         GUILayout.EndVertical();
         GUILayout.EndArea();

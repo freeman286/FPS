@@ -92,8 +92,8 @@ public class PlayerShoot : NetworkBehaviour {
     [ClientRpc]
     void RpcDoCasingEffect(Vector3 _pos, Quaternion _rot) {
         GameObject _casing = (GameObject)Instantiate(weaponManager.GetCurrentCasing(), _pos, Random.rotation);
-        _casing.GetComponent<Rigidbody>().velocity = _rot * new Vector3(1f, 0.3f, 0f) * 10f;
-        Destroy(_casing, 10f);
+        _casing.GetComponent<Rigidbody>().velocity = _rot * new Vector3(1f, 0.3f, 0f) * Random.Range(5f, 10f);
+        Destroy(_casing, 2f);
     }
 
     [Command]
