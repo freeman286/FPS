@@ -14,6 +14,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public int damage;
 
+    public int bounces;
+
     public bool exploding = false;
 
     private int framesSinceCreated = 0;
@@ -41,7 +43,13 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        Explode(collision);
+        bounces -= 1;
+
+        gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
+
+        if (bounces == 0) {
+            Explode(collision);
+        }
     }
 
     public void Explode (Collision _collision) {
@@ -55,6 +63,6 @@ public class ProjectileController : NetworkBehaviour {
             new Quaternion(0, 0, 0, 0)
         );
         _explosionSound.Play();
-        Destroy(_explosionSound.gameObject, 1f);
+        Destroy(_explosionSound.gameObject, 5f);
     }
 }

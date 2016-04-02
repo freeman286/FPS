@@ -86,7 +86,7 @@ public class PlayerShoot : NetworkBehaviour {
             new Quaternion(0, 0, 0, 0)
         );
         _shootSound.Play();
-        Destroy(_shootSound.gameObject, 1f);
+        Destroy(_shootSound.gameObject, 10f);
     }
 
     [ClientRpc]
