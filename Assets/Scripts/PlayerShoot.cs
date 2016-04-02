@@ -69,13 +69,17 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     [Command]
-    void CmdOnShoot (Vector3 _pos) {
+    void CmdOnShoot (Vector3 _pos, Vector3 _port, Quaternion _rot) {
         RpcDoShootEffect(_pos);
+        if (_port != Vector3.zero) {
+            RpcDoCasingEffect(_port, _rot);
+        }
     }
 
     [ClientRpc]
     void RpcDoShootEffect(Vector3 _pos) {
         weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
+        
         AudioSource _shootSound = (AudioSource)Instantiate(
             weaponManager.GetcurrentShootSound().GetComponent<AudioSource>(),
             _pos,
@@ -83,6 +87,13 @@ public class PlayerShoot : NetworkBehaviour {
         );
         _shootSound.Play();
         Destroy(_shootSound.gameObject, 1f);
+    }
+
+    [ClientRpc]
+    void RpcDoCasingEffect(Vector3 _pos, Quaternion _rot) {
+        GameObject _casing = (GameObject)Instantiate(weaponManager.GetCurrentCasing(), _pos, Random.rotation);
+        _casing.GetComponent<Rigidbody>().velocity = _rot * new Vector3(1f, 0.3f, 0f) * 10f;
+        Destroy(_casing, 10f);
     }
 
     [Command]
@@ -108,7 +119,11 @@ public class PlayerShoot : NetworkBehaviour {
 
         shooting = 0;
 
-        CmdOnShoot(cam.transform.position);
+        if (weaponManager.GetCurrentEjectionPort() != null) {
+            CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation);
+        } else {
+            CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation);
+        }
 
         float _devience;
 

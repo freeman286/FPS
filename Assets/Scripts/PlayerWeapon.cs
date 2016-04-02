@@ -23,6 +23,9 @@ public class PlayerWeapon : MonoBehaviour{
     public GameObject shootSound;
     public GameObject firePoint;
     public GameObject projectile;
+    public GameObject portHolder;
+    public GameObject ejectionPort;
+    public GameObject casing;
 
     public bool primary;
 }

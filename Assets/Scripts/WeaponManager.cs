@@ -25,6 +25,8 @@ public class WeaponManager : NetworkBehaviour
 
     private GameObject currentFirePoint;
 
+    private GameObject currentEjectionPort;
+
     [SerializeField]
     private GameObject weaponSwapSound;
 
@@ -111,6 +113,14 @@ public class WeaponManager : NetworkBehaviour
         return currentWeapon.shootSound;
     }
 
+    public GameObject GetCurrentEjectionPort() {
+        return currentEjectionPort;
+    }
+
+    public GameObject GetCurrentCasing() {
+        return currentWeapon.casing;
+    }
+
 
     [Client]
     void EquipWeapon(PlayerWeapon _weapon) {    
@@ -126,9 +136,16 @@ public class WeaponManager : NetworkBehaviour
         _weaponIns.transform.SetParent(weaponHolder);
         GameObject _firePoint = (GameObject)Instantiate(_weapon.firePoint, weaponHolder.position, weaponHolder.rotation);
         _firePoint.transform.SetParent(weaponHolder);
+        if (_weapon.portHolder != null) {
+            GameObject _portHolder = (GameObject)Instantiate(_weapon.portHolder, weaponHolder.position, weaponHolder.rotation);
+            _portHolder.transform.SetParent(weaponHolder);
+            GameObject _ejectionPort = _portHolder.transform.GetChild(0).gameObject;
+            currentEjectionPort = _ejectionPort;
+        }
 
         currentGraphics = _weapon.GetComponent<WeaponGraphics>();
         currentFirePoint = _firePoint;
+
         if (currentGraphics == null)
         {
             Debug.LogError("No WeaponGraphics for weapon " + _weaponIns.name);
