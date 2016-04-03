@@ -8,6 +8,7 @@ public class PlayerWeapon : MonoBehaviour{
     public int magSize;
     public int reloadTime;
     public int roundsPerShot;
+    public int burst = 1;
 
     public float fireRate;
     public float spread;
