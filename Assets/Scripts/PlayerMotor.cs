@@ -15,7 +15,7 @@ public class PlayerMotor : MonoBehaviour {
     [SerializeField]
     private float cameraRotationLimit = 50f;
 
-    private float jumpForce = 260f;
+    public float jumpForce = 280f;
 
     private Rigidbody rb;
 
