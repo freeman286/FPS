@@ -170,6 +170,7 @@ public class Player : NetworkBehaviour {
         cam.transform.parent = gameObject.transform;
 
         weapons.FillMags();
+        shoot.currentBurst = 0;
         controller.Reset();
 
         currentHealth = maxHealth;

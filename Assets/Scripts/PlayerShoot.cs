@@ -29,7 +29,7 @@ public class PlayerShoot : NetworkBehaviour {
 
     private int shooting = 100;
 
-    private int currentBurst = 0;
+    public int currentBurst = 0;
 
     void Start() {
         if (cam == null)
