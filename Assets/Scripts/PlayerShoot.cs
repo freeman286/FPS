@@ -19,7 +19,7 @@ public class PlayerShoot : NetworkBehaviour {
 
     private GameObject shootSound;
 
-    private int shootCooldown = 100;
+    private int shootCooldown = 200;
 
     [SerializeField]
     private PlayerMotor motor;
@@ -28,6 +28,8 @@ public class PlayerShoot : NetworkBehaviour {
     private Transform weaponHolder;
 
     private int shooting = 100;
+
+    private int currentBurst = 0;
 
     void Start() {
         if (cam == null)
@@ -47,8 +49,16 @@ public class PlayerShoot : NetworkBehaviour {
                 Shoot();
                 shootCooldown = 0;
             }
-        }
-        else if (currentWeapon.fireRate > 0) {
+        } else if (currentWeapon.burst > 1) {
+            if (Input.GetButtonDown("Fire1") && currentBurst == 0) {
+                InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
+            }
+
+            if (currentBurst >= currentWeapon.burst) {
+                CancelInvoke("Shoot");
+                currentBurst = 0;
+            }
+        } else if (currentWeapon.fireRate > 0) {
             if (Input.GetButtonDown("Fire1")) {
                 InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
             }
@@ -118,6 +128,8 @@ public class PlayerShoot : NetworkBehaviour {
         weaponManager.Shooting();
 
         shooting = 0;
+        currentBurst += 1;
+
 
         if (weaponManager.GetCurrentEjectionPort() != null) {
             CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation);
