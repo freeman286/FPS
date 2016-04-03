@@ -49,9 +49,22 @@ public class GameManager : MonoBehaviour {
         GUILayout.Label("Frames per second:");
         GUILayout.Label((1.0f / Time.deltaTime).ToString());
 
-        GUILayout.Label("Players in game:");
+        GUILayout.Label("<size=20>Players in game:</size>");
         foreach (string _playerID in players.Keys) {
-            GUILayout.Label(players[_playerID].transform.name);
+
+            string _name = players[_playerID].transform.name;
+
+            if (players[_playerID].isDead)
+            {
+                GUILayout.Label("<color=grey><size=20>" + _name + "</size></color>");
+            }
+            else if (players[_playerID].isDamaged) {
+                GUILayout.Label("<color=red><size=20>" + _name + "</size></color>");
+            }
+            else {
+                GUILayout.Label("<size=20>" + _name + "</size>");
+
+            }
         }
 
         GUILayout.EndVertical();

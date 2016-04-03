@@ -11,6 +11,10 @@ public class Player : NetworkBehaviour {
         protected set { _isDead = value; }
     }
 
+    public bool isDamaged {
+        get { return currentHealth != maxHealth; }
+    }
+
     [SerializeField]
     private int maxHealth = 100;
 
@@ -65,7 +69,7 @@ public class Player : NetworkBehaviour {
             Die();
         }
         healthRegen += 1;
-        if (healthRegen > 300 && currentHealth < 100) {
+        if (healthRegen > 300 && currentHealth < maxHealth) {
             currentHealth += 1;
         }
 
