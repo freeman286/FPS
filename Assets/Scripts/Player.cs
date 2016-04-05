@@ -93,7 +93,7 @@ public class Player : NetworkBehaviour {
 
     [ClientRpc]
     public void RpcTakeDamage(int _amount) {
-        if (isDead)
+        if (isDead || _amount < 0)
             return;
 
         if (isLocalPlayer) {
