@@ -16,39 +16,60 @@ public class ProjectileController : NetworkBehaviour {
 
     public int bounces;
 
+    public Rigidbody rb;
+
     public bool exploding = false;
+
+    public bool explosive;
 
     private int framesSinceCreated = 0;
 
-    private Vector3 start;
+    private Vector3 startPos;
+
+    private Quaternion startRot;
+
 
 
     // Use this for initialization
     void Start() {
         collider.enabled = false;
-        start = transform.position;
+        startPos = transform.position;
+        startRot = transform.rotation;
     }
 
     // Update is called once per frame
     void Update() {
         framesSinceCreated += 1;
 
-        if (Vector3.Distance(transform.position, start) > 0.5f) {
+        if (Vector3.Distance(transform.position, startPos) > 0.5f) {
             collider.enabled = true;
         }
 
-        if (framesSinceCreated > 10000) {
+        if (!explosive && bounces > 0) {
+            transform.rotation = startRot;
+        }
+
+        if (framesSinceCreated > 10000 || (!explosive && framesSinceCreated > 2000)) {
             Destroy(gameObject);
         }
+
+
     }
 
     void OnCollisionEnter(Collision collision) {
+
         bounces -= 1;
 
         gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
 
         if (bounces == 0) {
-            Explode(collision);
+            if (explosive) {
+                Explode(collision);
+            } else if (collision.collider.tag != "Projectile") {
+                Destroy(rb);
+                transform.position = collision.collider.transform.position;
+                transform.SetParent(collision.collider.transform);
+            }
         }
     }
 

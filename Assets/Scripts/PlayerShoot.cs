@@ -88,6 +88,7 @@ public class PlayerShoot : NetworkBehaviour {
 
     [ClientRpc]
     void RpcDoShootEffect(Vector3 _pos) {
+
         weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
         
         AudioSource _shootSound = (AudioSource)Instantiate(
@@ -157,7 +158,7 @@ public class PlayerShoot : NetworkBehaviour {
                 0
             );
 
-            CmdProjectileShot(transform.position, transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower);
+            CmdProjectileShot(transform.position, cam.transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower);
 
         } else {
 

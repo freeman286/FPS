@@ -76,11 +76,15 @@ public class Player : NetworkBehaviour {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
         foreach (var _hit in hitColliders) {
             if (_hit.transform.root.tag == "Projectile")  {
-                if (_hit.transform.root.GetComponent<ProjectileController>().exploding) {
+                if (_hit.transform.root.GetComponent<ProjectileController>().exploding || ! _hit.transform.root.GetComponent<ProjectileController>().explosive) {
 
                     float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
-                    RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
+                    if (_hit.transform.root.GetComponent<ProjectileController>().explosive) {
+                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
+                    } else if (_dist < 2f) {
+                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
+                    }
 
                 }
             }
@@ -191,6 +195,18 @@ public class Player : NetworkBehaviour {
 
         playerUIInstance = Instantiate(playerUIPrefab);
         playerUIInstance.name = playerUIPrefab.name;
+
+        RemoveProjectilesRecursively(transform);
+
+    }
+
+    public void RemoveProjectilesRecursively(Transform _obj) {
+        foreach (Transform child in _obj) {
+            RemoveProjectilesRecursively(child.transform);
+            if (child.tag == "Projectile") {
+                Destroy(child.gameObject);
+            }
+        }
     }
 
 }
