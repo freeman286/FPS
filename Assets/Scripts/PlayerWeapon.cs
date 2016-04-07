@@ -20,6 +20,8 @@ public class PlayerWeapon : MonoBehaviour{
     public bool projectileWeapon;
     public float throwPower;
 
+    public bool meleeWeapon;
+
     public GameObject graphics;
     public GameObject shootSound;
     public GameObject firePoint;

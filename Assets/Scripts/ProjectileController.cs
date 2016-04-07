@@ -66,9 +66,7 @@ public class ProjectileController : NetworkBehaviour {
             if (explosive) {
                 Explode(collision);
             } else if (collision.collider.tag != "Projectile") {
-                Destroy(rb);
-                transform.position = collision.collider.transform.position;
-                transform.SetParent(collision.collider.transform);
+                Hit(collision);
             }
         }
     }
@@ -85,5 +83,13 @@ public class ProjectileController : NetworkBehaviour {
         );
         _explosionSound.Play();
         Destroy(_explosionSound.gameObject, 5f);
+    }
+
+    public void Hit(Collision _collision) {
+        Destroy(rb);
+        transform.position = _collision.collider.transform.position;
+        transform.SetParent(_collision.collider.transform);
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
+        Destroy(_impact, 10f);
     }
 }

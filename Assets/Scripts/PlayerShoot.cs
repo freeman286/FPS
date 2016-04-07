@@ -67,12 +67,19 @@ public class PlayerShoot : NetworkBehaviour {
             }
         }
 
-        if (shooting < currentWeapon.shootCooldown / 6) {
-            weaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
-        } else if (shooting < currentWeapon.shootCooldown) {
-            weaponHolder.transform.Rotate(0.33333333333f, 0, 0 * Time.deltaTime);
-        } else if (!weaponManager.Swapping() && !weaponManager.IsReloading()) {
-            weaponHolder.transform.rotation = cam.transform.rotation;
+        if (!weaponManager.IsMelee()) {
+            if (shooting < currentWeapon.shootCooldown / 6)
+            {
+                weaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
+            }
+            else if (shooting < currentWeapon.shootCooldown)
+            {
+                weaponHolder.transform.Rotate(0.33333333333f, 0, 0 * Time.deltaTime);
+            }
+            else if (!weaponManager.Swapping() && !weaponManager.IsReloading())
+            {
+                weaponHolder.transform.rotation = cam.transform.rotation;
+            }
         }
 
         shooting += 1;
@@ -89,7 +96,9 @@ public class PlayerShoot : NetworkBehaviour {
     [ClientRpc]
     void RpcDoShootEffect(Vector3 _pos) {
 
-        weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
+        if (!weaponManager.IsMelee())  {
+            weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
+        }
         
         AudioSource _shootSound = (AudioSource)Instantiate(
             weaponManager.GetcurrentShootSound().GetComponent<AudioSource>(),

@@ -65,7 +65,7 @@ public class Player : NetworkBehaviour {
     }
 
     void Update () {
-        if (rb.position.y < -10) {
+        if (rb.position.y < -10 && !isDead) {
             Die();
         }
         healthRegen += 1;
