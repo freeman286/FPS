@@ -41,9 +41,13 @@ public class WeaponManager : NetworkBehaviour
 
     private int reloading = 100;
 
+    private int hitting = 100;
+
     public PlayerWeapon[] allWeapons;
 
     public Player player;
+
+    public Camera cam;
 
     void Awake () {
 
@@ -58,6 +62,7 @@ public class WeaponManager : NetworkBehaviour
         while (secondaryWeapon.primary) {
             secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         }
+
     }
 
 
@@ -88,6 +93,10 @@ public class WeaponManager : NetworkBehaviour
         SwitchingWeapons();
         Reloading();
         reloading += 1;
+        if (currentWeapon.meleeWeapon) {
+            Hitting();
+            hitting += 1;
+        }
     }
 
     public PlayerWeapon GetCurrentWeapon() {
@@ -270,8 +279,7 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
-    public void Shooting()
-    {
+    public void Shooting() {
         if (!isLocalPlayer)
         {
             return;
@@ -285,6 +293,9 @@ public class WeaponManager : NetworkBehaviour
             secondaryMagsize -= 1;
         }
 
+        if (currentWeapon.meleeWeapon) {
+            hitting = 0;
+        }
     }
 
     public bool CanShoot()
@@ -308,5 +319,20 @@ public class WeaponManager : NetworkBehaviour
             );
         _reloadSound.Play();
         Destroy(_reloadSound.gameObject, 1f);
+    }
+
+    public void Hitting() {
+        if (hitting < currentWeapon.shootCooldown / 4)
+        {
+            weaponHolder.transform.Rotate(12, 12, 0 * Time.deltaTime);
+            weaponHolder.transform.Translate(-0.24f, 0, 0 * Time.deltaTime);
+        }
+        else if (hitting < currentWeapon.shootCooldown) {
+            weaponHolder.transform.Rotate(-3, -3, 0 * Time.deltaTime);
+            weaponHolder.transform.Translate(0.06f, 0, 0 * Time.deltaTime);
+        } else {
+            weaponHolder.transform.rotation = cam.transform.rotation;
+            weaponHolder.transform.position = cam.transform.position;
+        }
     }
 }
