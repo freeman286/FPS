@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 _velocity = (_movHorizontal + _movVertical) * speed;
 
-        if (!walking.isPlaying && _velocity != Vector3.zero && !weaponManager.IsMelee()) {
+        if ((!walking.isPlaying && _velocity != Vector3.zero && !weaponManager.IsMelee()) || (weaponManager.Swapping() && !weaponManager.IsMelee())) {
             walking.Play("Walking");
         }
 
