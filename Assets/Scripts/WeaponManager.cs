@@ -330,7 +330,7 @@ public class WeaponManager : NetworkBehaviour
         else if (hitting < currentWeapon.shootCooldown) {
             weaponHolder.transform.Rotate(-3, -3, 0 * Time.deltaTime);
             weaponHolder.transform.Translate(0.06f, 0, 0 * Time.deltaTime);
-        } else {
+        } else if (!player.isDead) {
             weaponHolder.transform.rotation = cam.transform.rotation;
             weaponHolder.transform.position = cam.transform.position;
         }

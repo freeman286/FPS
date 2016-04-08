@@ -17,6 +17,8 @@ public class PlayerMotor : MonoBehaviour {
 
     public float jumpForce = 280f;
 
+    public WeaponManager weaponManager;
+
     private Rigidbody rb;
 
     public bool isGrounded = true;
@@ -41,6 +43,15 @@ public class PlayerMotor : MonoBehaviour {
         cameraRotationX = _cameraRotationX;
     }
 
+    void Update () {
+        if (weaponManager.GetCurrentWeapon().name == "Shield") {
+            cameraRotationLimit = 20f;
+        }
+        else {
+            cameraRotationLimit = 50f;
+        }
+    }
+
     void FixedUpdate () {
         PerformMovement();
         PerformRotation();
@@ -53,8 +64,7 @@ public class PlayerMotor : MonoBehaviour {
         }
     }
 
-    void PerformRotation()
-    {
+    void PerformRotation() {
         rb.MoveRotation(rb.rotation * Quaternion.Euler(rotation));
         if (cam != null)
         {
