@@ -21,6 +21,10 @@ public class PlayerMotor : MonoBehaviour {
 
     public bool isGrounded = true;
 
+    private Vector3 lastPos;
+
+    private Vector3 currentPos;
+
     void Start() {
         rb = GetComponent<Rigidbody>();
     }
@@ -40,6 +44,7 @@ public class PlayerMotor : MonoBehaviour {
     void FixedUpdate () {
         PerformMovement();
         PerformRotation();
+        lastPos = rb.transform.position;
     }
 
     void PerformMovement() {
@@ -78,6 +83,7 @@ public class PlayerMotor : MonoBehaviour {
     }
 
     public bool IsMoving() {
-         return rb.velocity.magnitude * 10000 > 0.15f;
+        currentPos = rb.position;
+        return currentPos != lastPos;
     }
 }

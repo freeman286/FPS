@@ -83,6 +83,7 @@ public class PlayerShoot : NetworkBehaviour {
         }
 
         shooting += 1;
+
     }
 
     [Command]
@@ -156,8 +157,6 @@ public class PlayerShoot : NetworkBehaviour {
         } else {
             _devience = currentWeapon.spread;
         }
-
-        
 
         if (currentWeapon.projectileWeapon) {
 
