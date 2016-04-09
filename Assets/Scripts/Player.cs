@@ -81,9 +81,9 @@ public class Player : NetworkBehaviour {
                     float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
                     if (_hit.transform.root.GetComponent<ProjectileController>().explosive) {
-                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
+                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
                     } else if (_dist < 2f) {
-                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
+                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
                     }
 
                 }
@@ -92,7 +92,7 @@ public class Player : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcTakeDamage(int _amount) {
+    public void RpcTakeDamage(int _amount, string _shooterID) {
         if (isDead || _amount < 0)
             return;
 
@@ -113,10 +113,15 @@ public class Player : NetworkBehaviour {
 
         if (currentHealth <= 0) {
             Die();
+            if (_shooterID != transform.name) {
+                GameManager.IncrPlayerScore(_shooterID);
+            }
         }
     }
 
     private void Die() {
+
+        GameManager.IncrPlayerDeaths(transform.name);
 
         isDead = true;
 

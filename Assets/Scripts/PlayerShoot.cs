@@ -42,6 +42,7 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     void Update() {
+                
         currentWeapon = weaponManager.GetCurrentWeapon();
         shootCooldown += 1;
         if (currentWeapon.fireRate <= 0 && shootCooldown > currentWeapon.shootCooldown) {
@@ -166,7 +167,7 @@ public class PlayerShoot : NetworkBehaviour {
                 0
             );
 
-            CmdProjectileShot(transform.position, cam.transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower);
+            CmdProjectileShot(transform.position, cam.transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower, transform.name);
 
         } else {
 
@@ -193,7 +194,7 @@ public class PlayerShoot : NetworkBehaviour {
                             _damage *= 3;
                         }
 
-                        CmdPlayerShot(_hit.collider.transform.root.name, _damage);
+                        CmdPlayerShot(_hit.collider.transform.root.name, _damage, transform.name);
                     }
 
                     CmdOnHit(_hit.point, _hit.normal);
@@ -205,23 +206,24 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     [Command]
-    void CmdPlayerShot (string _playerID, int _damage) {
+    void CmdPlayerShot (string _playerID, int _damage, string _shooterID) {
         Player _player = GameManager.GetPlayer(_playerID);
-        _player.RpcTakeDamage(_damage);
+        _player.RpcTakeDamage(_damage, _shooterID);
     }
 
-    public void playerShot(string _playerID, int _damage) {
-        CmdPlayerShot(_playerID, _damage);
+    public void playerShot(string _playerID, int _damage, string _shooterID) {
+        CmdPlayerShot(_playerID, _damage, _shooterID);
     }
 
     [Command]
-    void CmdProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel) {
-        RpcProjectileShot(_pos, _rot, _vel);
+    void CmdProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel, string _playerID) {
+        RpcProjectileShot(_pos, _rot, _vel, _playerID);
     }
 
     [ClientRpc]
-    void RpcProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel) {
+    void RpcProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel, string _playerID) {
         GameObject _projectile = (GameObject)Instantiate(weaponManager.GetCurrentProjectile(), _pos, _rot);
         _projectile.GetComponent<Rigidbody>().velocity = _vel;
+        _projectile.GetComponent<ProjectileController>().playerID = _playerID;
     }
 }

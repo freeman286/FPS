@@ -28,6 +28,8 @@ public class ProjectileController : NetworkBehaviour {
 
     private Quaternion startRot;
 
+    public string playerID;
+
 
 
     // Use this for initialization
