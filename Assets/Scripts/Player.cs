@@ -63,7 +63,7 @@ public class Player : NetworkBehaviour {
         float b = 0;
 
         Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-        while (r < 0.9f && g < 0.9f && b < 0.9f)  {
+        while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f))) {
             r = Random.Range(0.1f, 1.0f);
             b = Random.Range(0.1f, 1.0f);
             g = Random.Range(0.1f, 1.0f);

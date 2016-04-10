@@ -74,8 +74,7 @@ public class GameManager : MonoBehaviour {
             float b = 0;
 
             Random.seed = int.Parse(Regex.Replace(_playerID, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-            while (r < 0.9f && g < 0.9f && b < 0.9f)
-            {
+            while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f))) {
                 r = Random.Range(0.1f, 1.0f);
                 b = Random.Range(0.1f, 1.0f);
                 g = Random.Range(0.1f, 1.0f);
@@ -105,7 +104,7 @@ public class GameManager : MonoBehaviour {
 
     static string CreateNewName(string _playerID) {
 
-        string[] nameSyllables = { "MLG", "leet", "1337", "h4x", "face", "d00d", "kewl", "m8", "m80", "m88", "m9", "pwn", "pwnage", "FTW", " O RLY?", "4TW", "pew", "PewPew", "n00b", "nub", "livid", "friend", "dew", "coffee", "sniper", "sweg", "xtrem3", "skrub", "skrub lord" };
+        string[] nameSyllables = { "MLG", "leet", "1337", "h4x", "face", "d00d", "kewl", "m8", "m80", "m88", "m9", "pwn", "pwnage", "FTW", "O RLY?", "4TW", "pew", "PewPew", "n00b", "nub", "livid", "friend", "dew", "coffee", "sniper", "sweg", "xtrem3", "skrub", "skrub lord", "3million", "9000", "over 9000", "420", "360", "r3b3l" };
         string[] prefixes = { "Teh", "Mc", "Mr", "Teh Real", "Meh", "Lord", "Mastah", "th3", "It's" };
 
         Random.seed = int.Parse(Regex.Replace(_playerID, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
@@ -119,9 +118,8 @@ public class GameManager : MonoBehaviour {
                 name += " ";
             }
         }
-        
 
-        if (Random.Range(0.0f, 1.0f) > 0.5f) {
+        for (int i = 0; i < Random.Range(0, 2); i++) {
             name = prefixes[Random.Range(0, prefixes.Length)].ToUpper() + " " + name;
         }
 
