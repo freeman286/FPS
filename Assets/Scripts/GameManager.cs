@@ -69,21 +69,35 @@ public class GameManager : MonoBehaviour {
         GUILayout.Label("Players in game:");
         foreach (string _playerID in players.Keys) {
 
+            float r = 0;
+            float g = 0;
+            float b = 0;
+
+            Random.seed = int.Parse(Regex.Replace(_playerID, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
+            while (r < 0.9f && g < 0.9f && b < 0.9f)
+            {
+                r = Random.Range(0.1f, 1.0f);
+                b = Random.Range(0.1f, 1.0f);
+                g = Random.Range(0.1f, 1.0f);
+            }
+            Color _color = new Color(r, g, b);
+
             string _text = names[_playerID] + " Kills:" + kills[_playerID] + " Deaths:" + deaths[_playerID];
 
             if (players[_playerID].isDead) {
                 GUILayout.Label("<color=grey>" + _text + "</color>");
             }
-            else if (players[_playerID].isDamaged) {
+            else if (players[_playerID].isDamaged) {    
                 GUILayout.Label("<color=red>" + _text + "</color>");
             }
             else {
-                GUILayout.Label(_text);
+                GUILayout.Label("<color=#" + ColorToHex(_color) + ">" + _text + "</color>");
 
-            }
+            }   
         }
 
-        GUILayout.EndVertical();
+
+        GUILayout.EndVertical();    
         GUILayout.EndArea();
     }
 
@@ -112,5 +126,10 @@ public class GameManager : MonoBehaviour {
         }
 
         return name;
+    }
+
+    string ColorToHex(Color32 color) {
+        string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
+        return hex;
     }
 }

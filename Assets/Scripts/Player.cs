@@ -70,10 +70,6 @@ public class Player : NetworkBehaviour {
         }
         Color _color = new Color(r, g, b);
 
-        Debug.Log("red" + r);
-        Debug.Log("green" + g);
-        Debug.Log("blue" + b);
-
         for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++) {
             rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
         }
