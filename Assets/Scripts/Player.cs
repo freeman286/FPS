@@ -102,7 +102,7 @@ public class Player : NetworkBehaviour {
 
                     if (_hit.transform.root.GetComponent<ProjectileController>().explosive) {
                         RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
-                    } else if (_dist < 2f) {
+                    } else if (_dist < 1.5f) {
                         RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
                     }
 

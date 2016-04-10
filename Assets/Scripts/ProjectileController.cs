@@ -51,7 +51,7 @@ public class ProjectileController : NetworkBehaviour {
             transform.rotation = startRot;
         }
 
-        if (framesSinceCreated > 10000 || (!explosive && bounces < 1)) {
+        if ((framesSinceCreated > 10000 || (!explosive && bounces < 1)) && !transform.name.Contains("Arrow")) {
             Destroy(gameObject);
         }
 
