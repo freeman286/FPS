@@ -62,7 +62,6 @@ public class WeaponManager : NetworkBehaviour
         while (secondaryWeapon.primary) {
             secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         }
-
     }
 
 

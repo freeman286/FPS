@@ -49,6 +49,7 @@ public class PlayerShoot : NetworkBehaviour {
             if (Input.GetButtonDown("Fire1")) {
                 Shoot();
                 shootCooldown = 0;
+                currentBurst = 0;
             }
         } else if (currentWeapon.burst > 1) {
             if (Input.GetButtonDown("Fire1") && currentBurst == 0) {
@@ -66,6 +67,7 @@ public class PlayerShoot : NetworkBehaviour {
             else if (Input.GetButtonUp("Fire1")) {
                 CancelInvoke("Shoot");
             }
+            currentBurst = 0;
         }
 
         if (!weaponManager.IsMelee()) {
