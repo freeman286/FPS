@@ -51,7 +51,7 @@ public class ProjectileController : NetworkBehaviour {
             transform.rotation = startRot;
         }
 
-        if (framesSinceCreated > 10000 || (!explosive && framesSinceCreated > 2000)) {
+        if (framesSinceCreated > 10000 || (!explosive && bounces < 1)) {
             Destroy(gameObject);
         }
 
@@ -64,7 +64,7 @@ public class ProjectileController : NetworkBehaviour {
 
         gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
 
-        if (bounces == 0) {
+        if (bounces < 1) {
             if (explosive) {
                 Explode(collision);
             } else if (collision.collider.tag != "Projectile") {
@@ -88,10 +88,12 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Hit(Collision _collision) {
-        Destroy(rb);
-        transform.position = _collision.collider.transform.position;
-        transform.SetParent(_collision.collider.transform);
+        if (_collision.collider.tag == "Player" || _collision.collider.tag == "Weapon") {
+            Destroy(rb);
+            transform.position = _collision.collider.transform.position;
+            transform.SetParent(_collision.collider.transform);
+        }
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
-        Destroy(_impact, 10f);
+        Destroy(_impact, 20f);  
     }
 }
