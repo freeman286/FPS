@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 public class Player : NetworkBehaviour {
 
@@ -56,6 +57,29 @@ public class Player : NetworkBehaviour {
     public GameObject ding;
 
     public void Setup () {
+
+        float r = 0;
+        float g = 0;
+        float b = 0;
+
+        Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
+        while (r < 0.9f && g < 0.9f && b < 0.9f)  {
+            r = Random.Range(0.1f, 1.0f);
+            b = Random.Range(0.1f, 1.0f);
+            g = Random.Range(0.1f, 1.0f);
+        }
+        Color _color = new Color(r, g, b);
+
+        Debug.Log("red" + r);
+        Debug.Log("green" + g);
+        Debug.Log("blue" + b);
+
+        for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++) {
+            rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
+        }
+
+        
+
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < wasEnabled.Length; i++) {
             wasEnabled[i] = disableOnDeath[i].enabled;
