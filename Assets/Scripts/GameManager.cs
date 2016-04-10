@@ -91,29 +91,24 @@ public class GameManager : MonoBehaviour {
 
     static string CreateNewName(string _playerID) {
 
-        string[] nameSyllables = { "MLG", "leet", "1337", "h4x", "face", "d00d", "kewl", "m8", "m80", "m88", "m9", "pwn", "FTW", " O RLY?", "4TW", "pew", "Pew Pew", "n00b", "nub" };
-        string[] prefixes = { "Teh", "Mc", "Mr", "Teh Real", "Meh", "Lord", "Mastah" };
+        string[] nameSyllables = { "MLG", "leet", "1337", "h4x", "face", "d00d", "kewl", "m8", "m80", "m88", "m9", "pwn", "pwnage", "FTW", " O RLY?", "4TW", "pew", "PewPew", "n00b", "nub", "livid", "friend", "dew", "coffee", "sniper", "sweg", "xtrem3", "skrub", "skrub lord" };
+        string[] prefixes = { "Teh", "Mc", "Mr", "Teh Real", "Meh", "Lord", "Mastah", "th3", "It's" };
 
         Random.seed = int.Parse(Regex.Replace(_playerID, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
 
         string name = "";
-        string syllable;
         int numberOfSyllablesInFirstName = Random.Range(2, 4);
         for (int i = 0; i < numberOfSyllablesInFirstName; i++) {
-
-            syllable = nameSyllables[Random.Range(0, nameSyllables.Length)];
-
-            if (Random.value > 0.5 && i != numberOfSyllablesInFirstName - 1) {
-                syllable = syllable.ToUpper();
+            name += nameSyllables[Random.Range(0, nameSyllables.Length)].ToUpper();
+            if (i != numberOfSyllablesInFirstName - 1)
+            {
+                name += " ";
             }
-            if (Random.value > 0.5 && i != numberOfSyllablesInFirstName - 1) {
-                syllable += " ";
-            }
-            name += syllable;
         }
+        
 
         if (Random.Range(0.0f, 1.0f) > 0.5f) {
-            name = prefixes[Random.Range(0, prefixes.Length)] + name;
+            name = prefixes[Random.Range(0, prefixes.Length)].ToUpper() + " " + name;
         }
 
         return name;

@@ -177,6 +177,8 @@ public class Player : NetworkBehaviour {
     public void SetDefaults() {
         isDead = false;
 
+        rb.velocity = Vector3.zero;
+
         cam.transform.position = gameObject.transform.position;
         cam.transform.parent = gameObject.transform;
 
