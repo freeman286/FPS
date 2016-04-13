@@ -17,6 +17,8 @@ public class PlayerShoot : NetworkBehaviour {
 
     private Rigidbody rb;
 
+    public Rigidbody PlayerRB;
+
     private GameObject shootSound;
 
     private int shootCooldown = 200;
@@ -140,6 +142,8 @@ public class PlayerShoot : NetworkBehaviour {
         }
 
         weaponManager.Shooting();
+
+        PlayerRB.AddForce(-(Vector3.RotateTowards(cam.transform.forward, Vector3.down, 1, 1)) * currentWeapon.force);
 
         shooting = 0;
         currentBurst += 1;
