@@ -112,7 +112,7 @@ public class PlayerShoot : NetworkBehaviour {
             new Quaternion(0, 0, 0, 0)
         );
         _shootSound.Play();
-        Destroy(_shootSound.gameObject, 10f);
+        Destroy(_shootSound.gameObject, weaponManager.GetcurrentShootSound().GetComponent<AudioSource>().clip.length);
     }
 
     [ClientRpc]
