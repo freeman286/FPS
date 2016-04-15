@@ -56,6 +56,12 @@ public class Player : NetworkBehaviour {
 
     public GameObject ding;
 
+    [SyncVar]
+    public int kills = 0;
+
+    [SyncVar]
+    public int deaths = 0;
+
     public void Setup () {
 
         float r = 0;
@@ -134,14 +140,14 @@ public class Player : NetworkBehaviour {
         if (currentHealth <= 0) {
             Die();
             if (_shooterID != transform.name) {
-                GameManager.IncrPlayerScore(_shooterID);
+                GameManager.GetPlayer(_shooterID).kills += 1;
             }
         }
     }
 
     private void Die() {
 
-        GameManager.IncrPlayerDeaths(transform.name);
+        deaths += 1;
 
         isDead = true;
 

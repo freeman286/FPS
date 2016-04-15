@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : NetworkBehaviour {
 
     public static GameManager instance;
 
@@ -21,36 +23,27 @@ public class GameManager : MonoBehaviour {
 
     private const string PLAYER_ID_PREFIX = "Player ";
 
-    private static Dictionary<string, Player> players = new Dictionary<string, Player>();
-    private static Dictionary<string, int> kills = new Dictionary<string, int>();
-    private static Dictionary<string, int> deaths = new Dictionary<string, int>();
-    private static Dictionary<string, string> names = new Dictionary<string, string>();
+    public static Dictionary<string, Player> players = new Dictionary<string, Player>();
+    public static Dictionary<string, string> names = new Dictionary<string, string>();
 
     public static void RegisterPlayer(string _netID, Player _player) {
         string _playerID = PLAYER_ID_PREFIX + _netID;
         players.Add(_playerID, _player);
         _player.transform.name = _playerID;
-        kills.Add(_playerID, 0);
-        deaths.Add(_playerID, 0);
         names.Add(_playerID, CreateNewName(_playerID));
     }
 
     public static void UnRegisterPlayer(string _playerID) {
         players.Remove(_playerID);
-        kills.Remove(_playerID);
         names.Remove(_playerID);
+    }
+
+    public static string[] Players() {
+        return players.Keys.ToArray();
     }
 
     public static Player GetPlayer(string _playerID) {
         return players[_playerID];
-    }
-
-    public static void IncrPlayerScore(string _playerID) {
-        kills[_playerID] += 1;
-    }
-
-    public static void IncrPlayerDeaths(string _playerID)  {
-        deaths[_playerID] += 1;
     }
 
     public static int PlayerCount() {
@@ -81,7 +74,7 @@ public class GameManager : MonoBehaviour {
             }
             Color _color = new Color(r, g, b);
 
-            string _text = names[_playerID] + " Kills:" + kills[_playerID] + " Deaths:" + deaths[_playerID];
+            string _text = names[_playerID] + " Kills:" + players[_playerID].kills + " Deaths:" + players[_playerID].deaths;
 
             if (players[_playerID].isDead) {
                 GUILayout.Label("<color=grey>" + _text + "</color>");
