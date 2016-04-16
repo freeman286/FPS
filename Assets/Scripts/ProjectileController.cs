@@ -98,6 +98,6 @@ public class ProjectileController : NetworkBehaviour {
             transform.SetParent(_collision.collider.transform);
         }
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
-        Destroy(_impact, 20f);  
+        Destroy(_impact, _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration); 
     }
 }

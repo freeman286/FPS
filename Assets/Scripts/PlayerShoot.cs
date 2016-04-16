@@ -165,12 +165,14 @@ public class PlayerShoot : NetworkBehaviour {
             _devience = currentWeapon.spread;
         }
 
+        Random.seed = System.DateTime.Now.Millisecond;
+
         if (currentWeapon.projectileWeapon) {
 
             Vector3 _spread = new Vector3(
                 Random.Range(-_devience, _devience),
                 Random.Range(-_devience, _devience),
-                0
+                Random.Range(-_devience, _devience)
             );
 
             CmdProjectileShot(transform.position, cam.transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower, transform.name);
