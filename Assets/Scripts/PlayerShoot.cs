@@ -167,7 +167,8 @@ public class PlayerShoot : NetworkBehaviour {
 
         Random.seed = System.DateTime.Now.Millisecond;
 
-        if (currentWeapon.projectileWeapon) {
+        for (int i = 0; i < currentWeapon.roundsPerShot; i++)  {
+            if (currentWeapon.projectileWeapon) {
 
             Vector3 _spread = new Vector3(
                 Random.Range(-_devience, _devience),
@@ -179,7 +180,7 @@ public class PlayerShoot : NetworkBehaviour {
 
         } else {
 
-            for (int i = 0; i < currentWeapon.roundsPerShot; i++) {
+            
 
                 Vector3 _spread = new Vector3(
                     Random.Range(-_devience, _devience),

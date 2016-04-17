@@ -24,6 +24,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool impacts;
 
+    public int life = 200;
+
     private int framesSinceCreated = 0;
 
     private Vector3 startPos;
@@ -55,7 +57,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if ((framesSinceCreated > 500 || (!explosive && bounces < 1)) && !impacts) {
             Destroy(gameObject);
-        } else if (impacts && framesSinceCreated > 200 && !transform.root.name.Contains("Player")) {
+        } else if (impacts && framesSinceCreated > life && !transform.root.name.Contains("Player")) {
             Destroy(gameObject);
         }
 
