@@ -137,7 +137,7 @@ public class Player : NetworkBehaviour {
             Destroy(_dingSound.gameObject, 1f);
         }
 
-        if (timeSinceSpawned > 50) {
+        if (timeSinceSpawned > 100) {
             currentHealth -= _amount;
         }
 
@@ -209,6 +209,8 @@ public class Player : NetworkBehaviour {
     public void SetDefaults() {
         isDead = false;
 
+        timeSinceSpawned = 0;
+         
         rb.velocity = Vector3.zero;
 
         cam.transform.position = gameObject.transform.position;
