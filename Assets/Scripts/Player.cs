@@ -62,6 +62,9 @@ public class Player : NetworkBehaviour {
     [SyncVar]
     public int deaths = 0;
 
+    [SyncVar]
+    public int timeSinceSpawned = 0;
+
     public void Setup () {
 
         float r = 0;
@@ -115,6 +118,8 @@ public class Player : NetworkBehaviour {
                 }
             }
         }
+
+        timeSinceSpawned += 1;
     }
 
     [ClientRpc]
@@ -131,9 +136,10 @@ public class Player : NetworkBehaviour {
             _dingSound.Play();
             Destroy(_dingSound.gameObject, 1f);
         }
-        
 
-        currentHealth -= _amount;
+        if (timeSinceSpawned > 50) {
+            currentHealth -= _amount;
+        }
 
         healthRegen = 0;
 
