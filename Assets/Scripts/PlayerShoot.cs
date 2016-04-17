@@ -54,7 +54,7 @@ public class PlayerShoot : NetworkBehaviour {
                 currentBurst = 0;
             }
         } else if (currentWeapon.burst > 1) {
-            if (Input.GetButtonDown("Fire1") && currentBurst == 0) {
+            if (Input.GetButtonDown("Fire1") && currentBurst == 0 && !weaponManager.IsReloading()) {
                 InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
             }
 
