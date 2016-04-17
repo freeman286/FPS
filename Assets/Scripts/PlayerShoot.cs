@@ -170,13 +170,19 @@ public class PlayerShoot : NetworkBehaviour {
         for (int i = 0; i < currentWeapon.roundsPerShot; i++)  {
             if (currentWeapon.projectileWeapon) {
 
-            Vector3 _spread = new Vector3(
-                Random.Range(-_devience, _devience),
-                Random.Range(-_devience, _devience),
-                Random.Range(-_devience, _devience)
-            );
+                Vector3 _spread = new Vector3(
+                    Random.Range(-_devience, _devience),
+                    Random.Range(-_devience, _devience),
+                    Random.Range(-_devience, _devience)
+                );
 
-            CmdProjectileShot(transform.position, cam.transform.rotation, (cam.transform.forward + _spread) * currentWeapon.throwPower, transform.name);
+                Quaternion _rot = Quaternion.Euler(
+                    Random.Range(-_devience, _devience) * 100, 
+                    Random.Range(-_devience, _devience) * 100, 
+                    Random.Range(-_devience, _devience) * 100
+                );
+
+                CmdProjectileShot(transform.position, cam.transform.rotation * _rot, (cam.transform.forward + _spread) * currentWeapon.throwPower, transform.name);
 
         } else {
 
