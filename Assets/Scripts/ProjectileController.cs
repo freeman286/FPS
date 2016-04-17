@@ -55,7 +55,7 @@ public class ProjectileController : NetworkBehaviour {
             transform.rotation = startRot;
         }
 
-        if ((framesSinceCreated > 500 || (!explosive && bounces < 1)) && !impacts) {
+        if ((framesSinceCreated > life || (!explosive && bounces < 1)) && !impacts) {
             Destroy(gameObject);
         } else if (impacts && framesSinceCreated > life && !transform.root.name.Contains("Player")) {
             Destroy(gameObject);
@@ -100,6 +100,15 @@ public class ProjectileController : NetworkBehaviour {
             transform.SetParent(_collision.collider.transform);
         }
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
-        Destroy(_impact, _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration); 
+
+        float time = 0;
+
+        if (_impact.GetComponent<ParticleSystem>() == null) {
+            time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
+        } else {
+            time = _impact.GetComponent<ParticleSystem>().duration * 10;
+        }
+
+         Destroy(_impact, time); 
     }
 }
