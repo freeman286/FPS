@@ -99,6 +99,11 @@ public class ProjectileController : NetworkBehaviour {
             transform.position = _collision.collider.transform.position;
             transform.SetParent(_collision.collider.transform);
         }
+
+        if (_collision.collider.tag == "Weapon") {
+            transform.localScale = new Vector3(0.1f / transform.parent.localScale.x, 0.1f / transform.parent.localScale.y, 0.05f / transform.parent.localScale.z);
+        }
+
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
 
         float time = 0;
