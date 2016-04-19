@@ -127,7 +127,7 @@ public class Player : NetworkBehaviour {
         if (isDead || _amount < 0)
             return;
 
-        if (isLocalPlayer) {
+        if (isLocalPlayer && _amount != 0) {
             AudioSource _dingSound = (AudioSource)Instantiate(
                 ding.GetComponent<AudioSource>(),
                 cam.transform.position,

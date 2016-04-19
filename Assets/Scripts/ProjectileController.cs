@@ -14,6 +14,10 @@ public class ProjectileController : NetworkBehaviour {
 
     public int damage;
 
+    public bool repeats;
+
+    public float repeatCooldown;
+
     public int bounces;
 
     public Rigidbody rb;
@@ -23,6 +27,8 @@ public class ProjectileController : NetworkBehaviour {
     public bool explosive;
 
     public bool impacts;
+
+    public bool sticky;
 
     public int life = 200;
 
@@ -41,6 +47,11 @@ public class ProjectileController : NetworkBehaviour {
         collider.enabled = false;
         startPos = transform.position;
         startRot = transform.rotation;
+        if (repeats) {
+            InvokeRepeating("SpawnRepeat", 0.1f, repeatCooldown);
+            rb.isKinematic = false;
+            rb.WakeUp();
+        }
     }
 
     // Update is called once per frame
@@ -55,12 +66,15 @@ public class ProjectileController : NetworkBehaviour {
             transform.rotation = startRot;
         }
 
-        if ((framesSinceCreated > life || (!explosive && bounces < 1)) && !impacts) {
+        if ((framesSinceCreated > life || (!explosive && !sticky && bounces < 1)) && !impacts) {
             Destroy(gameObject);
-        } else if (impacts && framesSinceCreated > life && !transform.root.name.Contains("Player")) {
+        } else if (sticky && framesSinceCreated > life) {
+            Destroy(gameObject);
+            CancelInvoke("SpawnRepeat");
+        }
+        else if (impacts && framesSinceCreated > life && !transform.root.name.Contains("Player")) {
             Destroy(gameObject);
         }
-
 
     }
 
@@ -73,6 +87,8 @@ public class ProjectileController : NetworkBehaviour {
         if (bounces < 1) {
             if (explosive) {
                 Explode(collision);
+            } else if (sticky) {
+                Stick(collision);
             } else if (collision.collider.tag != "Projectile") {
                 Hit(collision);
             }
@@ -116,4 +132,39 @@ public class ProjectileController : NetworkBehaviour {
 
          Destroy(_impact, time); 
     }
-}
+
+    public void Stick(Collision _collision) {
+        rb.velocity = Vector3.zero;
+        rb.drag = 10000;
+
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
+
+        float time = 0;
+
+        if (_impact.GetComponent<ParticleSystem>() == null)
+        {
+            time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
+        }
+        else {
+            time = _impact.GetComponent<ParticleSystem>().duration * 10;
+        }
+
+        Destroy(_impact, time);
+    }
+
+    void SpawnRepeat() {
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
+
+        float time = 0;
+
+        if (_impact.GetComponent<ParticleSystem>() == null)
+        {
+            time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
+        }
+        else {
+            time = _impact.GetComponent<ParticleSystem>().duration * 10;
+        }
+
+        Destroy(_impact, time);
+    }
+  }
