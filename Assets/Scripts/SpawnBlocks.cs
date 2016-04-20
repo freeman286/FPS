@@ -30,8 +30,18 @@ public class SpawnBlocks : NetworkBehaviour {
                 z = Random.Range(-28, 28);
             }
             rot = Random.Range(0, 3) * 90;
+
             Collider[] _hitColliders = Physics.OverlapSphere(new Vector3(x, 0, z), _block.transform.localScale.x * 5);
-            if (_hitColliders.Length < 2) {
+            int _objectCount = 0;
+
+            foreach (var collider in _hitColliders) {
+                if (collider.gameObject.tag == "Terrain" || collider.gameObject.tag == "Surface" || collider.gameObject.tag == "Edge") {
+                    _objectCount += 1;
+                }
+            }
+
+
+            if (_objectCount < 2) {
                 GameObject _block1 = (GameObject)Instantiate(_block, new Vector3(x, 0, z), Quaternion.Euler(0, rot, 0));
                 GameObject _block2 = (GameObject)Instantiate(_block, new Vector3(-x, 0, -z), Quaternion.Euler(0, -rot, 0));
 
