@@ -132,6 +132,10 @@ public class WeaponManager : NetworkBehaviour
         return currentWeapon.meleeWeapon;
     }
 
+    public void EquipPrimary()
+    {
+        EquipWeapon(primaryWeapon);
+    }
 
     [Client]
     void EquipWeapon(PlayerWeapon _weapon) {    
