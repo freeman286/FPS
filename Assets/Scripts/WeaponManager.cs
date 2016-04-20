@@ -79,8 +79,8 @@ public class WeaponManager : NetworkBehaviour
     }
 
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Q) && !IsReloading()) {
+    void FixedUpdate() {
+        if (Input.GetKeyDown(KeyCode.Q) && !IsReloading() && shoot.currentBurst == 0) {
             SwitchWeapon();
         }
 
@@ -138,7 +138,7 @@ public class WeaponManager : NetworkBehaviour
     }
 
     [Client]
-    void EquipWeapon(PlayerWeapon _weapon) {    
+    void EquipWeapon(PlayerWeapon _weapon) {
 
         foreach (Transform child in weaponHolder)
         {

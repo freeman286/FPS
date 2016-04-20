@@ -43,7 +43,7 @@ public class PlayerShoot : NetworkBehaviour {
         weaponManager = GetComponent<WeaponManager>();
     }
 
-    void Update() {
+    void FixedUpdate() {
                 
         currentWeapon = weaponManager.GetCurrentWeapon();
         shootCooldown += 1;
