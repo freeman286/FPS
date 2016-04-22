@@ -62,13 +62,13 @@ public class WeaponManager : NetworkBehaviour
         while (secondaryWeapon.primary) {
             secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
         }
+
     }
 
 
     void Start()  {
-        EquipWeapon(primaryWeapon);
         FillMags();
-        
+        SwitchWeapon();
     }
 
             
@@ -80,6 +80,13 @@ public class WeaponManager : NetworkBehaviour
 
 
     void FixedUpdate() {
+
+        if (System.DateTime.Now.Millisecond % 100 == 0) {
+            foreach (var _playerID in GameManager.players.Keys) {
+                CmdSwitchingWeapons(GameManager.players[_playerID].transform.name, GameManager.players[_playerID].GetComponent<WeaponManager>().currentWeapon.name, "");
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Q) && !IsReloading() && shoot.currentBurst == 0 && isLocalPlayer) {
             SwitchWeapon();
         }
@@ -100,6 +107,16 @@ public class WeaponManager : NetworkBehaviour
 
     public PlayerWeapon GetCurrentWeapon() {
         return currentWeapon;
+    }
+
+    public PlayerWeapon GetOtherWeapon() {
+        if (currentWeapon == primaryWeapon)
+        {
+            return secondaryWeapon;
+        }
+        else {
+            return primaryWeapon;
+        }
     }
 
     public WeaponGraphics GetCurrentGraphics() {
@@ -208,20 +225,33 @@ public class WeaponManager : NetworkBehaviour
     [ClientRpc]
     public void RpcRemoteSwitchingWeapons(string _currentWeapon, string _primaryWeapon, string _secondaryWeapon) {
 
-        foreach (var weapon in allWeapons) {
-            if (weapon.name == _primaryWeapon) {
-                primaryWeapon = weapon;
-            }
-            if (weapon.name == _secondaryWeapon)
+        if (_secondaryWeapon != "")
+        {
+            foreach (var weapon in allWeapons)
             {
-                secondaryWeapon = weapon;
+                if (weapon.name == _primaryWeapon)
+                {
+                    primaryWeapon = weapon;
+                }
+                if (weapon.name == _secondaryWeapon)
+                {
+                    secondaryWeapon = weapon;
+                }
             }
-        }
-
-        if (_currentWeapon == _primaryWeapon) {
-            EquipWeapon(secondaryWeapon);
+            if (_currentWeapon == _primaryWeapon)
+            {
+                EquipWeapon(secondaryWeapon);
+            }
+            else {
+                EquipWeapon(primaryWeapon);
+            }
         } else {
-            EquipWeapon(primaryWeapon);
+            foreach (var weapon in allWeapons) {
+                if (weapon.name == _currentWeapon) {
+                    EquipWeapon(weapon);
+                }
+            }
+
         }
 
     }
