@@ -51,17 +51,8 @@ public class WeaponManager : NetworkBehaviour
 
     void Awake () {
 
-        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-
-        primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
-        while (!primaryWeapon.primary) {
-            primaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
-        }
-
-        secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
-        while (secondaryWeapon.primary) {
-            secondaryWeapon = allWeapons[Random.Range(0, allWeapons.Length)];
-        }
+        primaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetPrimaryWeapon();
+        secondaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetSecondaryWeapon();
 
     }
 
