@@ -136,7 +136,7 @@ public class Player : NetworkBehaviour {
             Destroy(_dingSound.gameObject, 1f);
         }
 
-        if (timeSinceSpawned > 200) {
+        if (timeSinceSpawned > 100) {
             currentHealth -= _amount;
         }
 
