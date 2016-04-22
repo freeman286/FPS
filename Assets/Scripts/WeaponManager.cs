@@ -80,7 +80,7 @@ public class WeaponManager : NetworkBehaviour
 
 
     void FixedUpdate() {
-        if (Input.GetKeyDown(KeyCode.Q) && !IsReloading() && shoot.currentBurst == 0) {
+        if (Input.GetKeyDown(KeyCode.Q) && !IsReloading() && shoot.currentBurst == 0 && isLocalPlayer) {
             SwitchWeapon();
         }
 
@@ -132,8 +132,7 @@ public class WeaponManager : NetworkBehaviour
         return currentWeapon.meleeWeapon;
     }
 
-    public void EquipPrimary()
-    {
+    public void EquipPrimary() {
         EquipWeapon(primaryWeapon);
     }
 
@@ -161,8 +160,7 @@ public class WeaponManager : NetworkBehaviour
         currentGraphics = _weapon.GetComponent<WeaponGraphics>();
         currentFirePoint = _firePoint;
 
-        if (currentGraphics == null)
-        {
+        if (currentGraphics == null) {
             Debug.LogError("No WeaponGraphics for weapon " + _weaponIns.name);
         }
 
@@ -184,17 +182,8 @@ public class WeaponManager : NetworkBehaviour
     void SwitchingWeapons() {
 
         if (swapping == 10) {
-            CmdSwitchingWeapons(true);
+            CmdSwitchingWeapons(transform.name, primaryWeapon.name, secondaryWeapon.name);
             PlayWeaponSwapSound();
-        }
-
-        if (!isLocalPlayer) {
-            if (swapping == 10)
-            {
-                CmdSwitchingWeapons(true);
-            }
-            return;
-
         }
 
         if (swapping < 10)
@@ -209,19 +198,29 @@ public class WeaponManager : NetworkBehaviour
     }
 
     [Command]
-    void CmdSwitchingWeapons(bool _toggle) {
-        
-        RpcRemoteSwitchingWeapons(_toggle);
+    void CmdSwitchingWeapons(string _playerID, string _primaryWeapon, string _secondaryWeapon) {
+
+        Player _player = GameManager.GetPlayer(_playerID);
+
+        _player.weaponManager.RpcRemoteSwitchingWeapons(_player.weaponManager.currentWeapon.name, _primaryWeapon, _secondaryWeapon);
     }
 
     [ClientRpc]
-    void RpcRemoteSwitchingWeapons(bool _toggle) {
+    public void RpcRemoteSwitchingWeapons(string _currentWeapon, string _primaryWeapon, string _secondaryWeapon) {
 
-        if (currentWeapon == primaryWeapon)
-        {
-            EquipWeapon(secondaryWeapon);
+        foreach (var weapon in allWeapons) {
+            if (weapon.name == _primaryWeapon) {
+                primaryWeapon = weapon;
+            }
+            if (weapon.name == _secondaryWeapon)
+            {
+                secondaryWeapon = weapon;
+            }
         }
-        else {
+
+        if (_currentWeapon == _primaryWeapon) {
+            EquipWeapon(secondaryWeapon);
+        } else {
             EquipWeapon(primaryWeapon);
         }
 
