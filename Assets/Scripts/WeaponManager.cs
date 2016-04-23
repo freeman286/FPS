@@ -51,9 +51,10 @@ public class WeaponManager : NetworkBehaviour
 
     void Awake () {
 
-        primaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetPrimaryWeapon();
-        secondaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetSecondaryWeapon();
-
+        if (Camera.main.GetComponent<PlayerInfo>() != null) {
+            primaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetPrimaryWeapon();
+            secondaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetSecondaryWeapon();
+        }
     }
 
 

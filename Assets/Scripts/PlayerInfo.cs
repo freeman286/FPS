@@ -25,7 +25,7 @@ public class PlayerInfo : MonoBehaviour {
         Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year + 1;
         if (primaryWeapon == null)
         {
-            for (int i = Random.Range(1, 6); i < weapons.Length; i += Random.Range(2, 6))
+            for (int i = Random.Range(1, 4); i < weapons.Length; i += Random.Range(2, 4))
             {
                 if (weapons[i].primary)
                 {
@@ -38,7 +38,7 @@ public class PlayerInfo : MonoBehaviour {
             GUILayout.Label("Primary: " + primaryWeapon.name);
         }
         Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year + 1;
-        for (int i = Random.Range(1, 6); i < weapons.Length; i += Random.Range(2, 6))
+        for (int i = Random.Range(1, 4); i < weapons.Length; i += Random.Range(2, 4))
         {
             if ((weapons[i].primary && GUILayout.Button(weapons[i].name)))
             {
