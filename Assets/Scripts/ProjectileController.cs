@@ -134,22 +134,25 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Stick(Collision _collision) {
-        rb.velocity = Vector3.zero;
-        rb.drag = 10000;
 
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
+        if (_collision.collider.tag != "Projectile") {
+            rb.velocity = Vector3.zero;
+            rb.drag = 100;
 
-        float time = 0;
+            GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
 
-        if (_impact.GetComponent<ParticleSystem>() == null)
-        {
-            time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
+            float time = 0;
+
+            if (_impact.GetComponent<ParticleSystem>() == null)
+            {
+                time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
+            }
+            else {
+                time = _impact.GetComponent<ParticleSystem>().duration * 10;
+            }
+
+            Destroy(_impact, time);
         }
-        else {
-            time = _impact.GetComponent<ParticleSystem>().duration * 10;
-        }
-
-        Destroy(_impact, time);
     }
 
     void SpawnRepeat() {

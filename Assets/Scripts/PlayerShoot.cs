@@ -89,6 +89,10 @@ public class PlayerShoot : NetworkBehaviour {
 
         shooting += 1;
 
+        if (weaponManager.Swapping()) {
+            shootCooldown = 0;
+        }
+
     }
 
     [Command]
