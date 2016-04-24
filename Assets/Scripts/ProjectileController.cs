@@ -95,16 +95,13 @@ public class ProjectileController : NetworkBehaviour {
 
 
         if (homing) {
-
-            Debug.Log(target.root);
-
             Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
 
-            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 1));
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 3));
 
             rb.velocity = transform.forward * rb.velocity.magnitude;
 
-            if (Vector3.Distance(transform.position, target.transform.position) < 5) {
+            if (Vector3.Distance(transform.position, target.transform.position) < 3) {
                 exploding = true;
                 GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
                 Destroy(_impact, 10f);
