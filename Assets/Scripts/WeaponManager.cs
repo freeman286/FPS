@@ -83,7 +83,7 @@ public class WeaponManager : NetworkBehaviour
             SwitchWeapon();
         }
 
-        if (((Input.GetKeyDown(KeyCode.R) || primaryMagsize == 0 || secondaryMagsize == 0) && reloading > 150) && !currentWeapon.meleeWeapon) {
+        if (((Input.GetKeyDown(KeyCode.R) || primaryMagsize == 0 || secondaryMagsize == 0) && reloading > 150) && !currentWeapon.meleeWeapon && shoot.currentBurst == 0) {
             Reload();
         }
 

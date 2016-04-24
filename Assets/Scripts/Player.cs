@@ -103,14 +103,13 @@ public class Player : NetworkBehaviour {
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
         foreach (var _hit in hitColliders) {
-            if (_hit.transform.root.tag == "Projectile")  {
+            if (_hit.transform.root.tag == "Projectile" || _hit.transform.root.tag == "Decoy")  {
                 if (_hit.transform.root.GetComponent<ProjectileController>().exploding || ! _hit.transform.root.GetComponent<ProjectileController>().explosive) {
 
                     float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
                     if (_hit.transform.root.GetComponent<ProjectileController>().explosive) {
                         RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
-                        Debug.Log(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage));
                     } else if (_dist < 1.5f) {
                         RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
                     }
