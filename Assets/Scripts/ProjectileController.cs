@@ -12,7 +12,7 @@ public class ProjectileController : NetworkBehaviour {
 
     public PlayerShoot shoot;
 
-    public int damage;
+    public float damage;
 
     public bool repeats;
 
@@ -30,6 +30,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool sticky;
 
+    public bool homing;
+
     public int life = 200;
 
     private int framesSinceCreated = 0;
@@ -40,6 +42,9 @@ public class ProjectileController : NetworkBehaviour {
 
     public string playerID;
 
+    public float distance = Mathf.Infinity;
+    public float diff;
+    public Transform target;
 
 
     // Use this for initialization
@@ -52,10 +57,22 @@ public class ProjectileController : NetworkBehaviour {
             rb.isKinematic = false;
             rb.WakeUp();
         }
+
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
+            diff = (go.transform.position - transform.position).sqrMagnitude;
+
+            if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(go.transform.forward, transform.position - go.transform.position) < 60)
+            {
+                distance = diff;
+                target = go.transform;
+            }
+
+        }
+
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         framesSinceCreated += 1;
 
         if (Vector3.Distance(transform.position, startPos) > 0.5f) {
@@ -76,6 +93,31 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(gameObject);
         }
 
+
+        if (homing) {
+
+            Debug.Log(target.root);
+
+            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
+
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 1));
+
+            rb.velocity = transform.forward * rb.velocity.magnitude;
+
+            if (Vector3.Distance(transform.position, target.transform.position) < 1) {
+                exploding = true;
+                GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
+                Destroy(_impact, 10f);
+                Destroy(gameObject, Time.deltaTime);
+                AudioSource _explosionSound = (AudioSource)Instantiate(
+                    explosionSound.GetComponent<AudioSource>(),
+                    transform.position,
+                    new Quaternion(0, 0, 0, 0)
+                );
+                _explosionSound.Play();
+                Destroy(_explosionSound.gameObject, 5f);
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision) {
