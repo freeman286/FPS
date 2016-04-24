@@ -104,7 +104,7 @@ public class ProjectileController : NetworkBehaviour {
 
             rb.velocity = transform.forward * rb.velocity.magnitude;
 
-            if (Vector3.Distance(transform.position, target.transform.position) < 1) {
+            if (Vector3.Distance(transform.position, target.transform.position) < 5) {
                 exploding = true;
                 GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
                 Destroy(_impact, 10f);
