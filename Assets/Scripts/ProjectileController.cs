@@ -61,7 +61,7 @@ public class ProjectileController : NetworkBehaviour {
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
             diff = (go.transform.position - transform.position).sqrMagnitude;
 
-            if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(go.transform.forward, transform.position - go.transform.position) < 60)
+            if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 15)
             {
                 distance = diff;
                 target = go.transform;
