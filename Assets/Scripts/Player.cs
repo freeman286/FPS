@@ -62,7 +62,7 @@ public class Player : NetworkBehaviour {
     public int deaths = 0;
 
     [SyncVar]
-    public int timeSinceSpawned = 0;
+    public int timeSinceSpawned = -1;
 
     public void Setup () {
 
@@ -208,7 +208,9 @@ public class Player : NetworkBehaviour {
     public void SetDefaults() {
         isDead = false;
 
-        timeSinceSpawned = 0;
+        if (timeSinceSpawned > 0) {
+            timeSinceSpawned = 0;
+        }
          
         rb.velocity = Vector3.zero;
 

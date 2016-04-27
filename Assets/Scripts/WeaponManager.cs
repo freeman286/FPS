@@ -73,7 +73,7 @@ public class WeaponManager : NetworkBehaviour
 
     void FixedUpdate() {
 
-        if (System.DateTime.Now.Millisecond % 100 == 0) {
+        if (player.timeSinceSpawned == -1) {
             foreach (var _playerID in GameManager.players.Keys) {
                 CmdSwitchingWeapons(GameManager.players[_playerID].transform.name, GameManager.players[_playerID].GetComponent<WeaponManager>().currentWeapon.name, "");
             }
