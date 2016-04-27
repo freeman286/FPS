@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\PlayerShoot.cs" />
     <Compile Include="Assets\Scripts\PlayerWeapon.cs" />
     <Compile Include="Assets\Scripts\ProjectileController.cs" />
+    <Compile Include="Assets\Scripts\RandomColour.cs" />
     <Compile Include="Assets\Scripts\RenderCamera.cs" />
     <Compile Include="Assets\Scripts\SpawnBlocks.cs" />
     <Compile Include="Assets\Scripts\Util.cs" />
