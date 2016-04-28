@@ -12,13 +12,11 @@ public class PlayerInfo : MonoBehaviour {
 
     private PlayerWeapon secondaryWeapon;
 
-    void Update()
-    {
+    void Start() {
         OnGUI();
     }
 
-    void OnGUI()
-    {
+    void OnGUI() {
         GUILayout.BeginArea(new Rect(10, 150, 200, 500));
         GUILayout.BeginVertical();
 
