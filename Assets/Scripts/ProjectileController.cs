@@ -32,6 +32,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool homing;
 
+    public int homingness;
+
     public int life = 200;
 
     private int framesSinceCreated = 0;
@@ -106,18 +108,19 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(gameObject);
         }
 
-
-        if (homing && target != null && Time.fixedTime % 0.1 == 0) {
+        if (homing && target != null && Time.fixedTime % 0.01 == 0) {
             Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
 
-            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 500));
+            Debug.Log(target);
+
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, homingness));
 
             rb.velocity = transform.forward * rb.velocity.magnitude;
 
            
         }
 
-        if (homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3) {
+        if (homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
             exploding = true;
             GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
             Destroy(_impact, 10f);
