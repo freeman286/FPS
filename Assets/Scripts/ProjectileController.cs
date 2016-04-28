@@ -57,35 +57,38 @@ public class ProjectileController : NetworkBehaviour {
             rb.isKinematic = false;
             rb.WakeUp();
         }
-
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
-            diff = (go.transform.position - transform.position).sqrMagnitude;
-
-            if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 15)
+        if (homing) {
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
             {
-                distance = diff;
-                target = go.transform;
+                diff = (go.transform.position - transform.position).sqrMagnitude;
+
+                if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 30)
+                {
+                    distance = diff;
+                    target = go.transform;
+                }
+
             }
 
-        }
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Decoy"))
+            {
+                diff = (go.transform.position - transform.position).sqrMagnitude;
 
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Decoy")) {
-            diff = (go.transform.position - transform.position).sqrMagnitude;
+                if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 60)
+                {
+                    distance = diff;
+                    target = go.transform;
+                }
 
-            if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 30) {
-                distance = diff;
-                target = go.transform;
             }
-
         }
-
     }
 
     // Update is called once per frame
     void FixedUpdate() {
         framesSinceCreated += 1;
 
-        if (Vector3.Distance(transform.position, startPos) > 0.5f) {
+        if (Vector3.Distance(transform.position, startPos) > 0.5f && collider != null) {
             collider.enabled = true;
         }
 
@@ -104,26 +107,28 @@ public class ProjectileController : NetworkBehaviour {
         }
 
 
-        if (homing) {
+        if (homing && target != null && Time.fixedTime % 0.1 == 0) {
             Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
 
-            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 3));
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, 500));
 
             rb.velocity = transform.forward * rb.velocity.magnitude;
 
-            if (Vector3.Distance(transform.position, target.transform.position) < 3) {
-                exploding = true;
-                GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
-                Destroy(_impact, 10f);
-                Destroy(gameObject, Time.deltaTime);
-                AudioSource _explosionSound = (AudioSource)Instantiate(
-                    explosionSound.GetComponent<AudioSource>(),
-                    transform.position,
-                    new Quaternion(0, 0, 0, 0)
-                );
-                _explosionSound.Play();
-                Destroy(_explosionSound.gameObject, 5f);
-            }
+           
+        }
+
+        if (homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3) {
+            exploding = true;
+            GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
+            Destroy(_impact, 10f);
+            Destroy(gameObject, Time.deltaTime);
+            AudioSource _explosionSound = (AudioSource)Instantiate(
+                explosionSound.GetComponent<AudioSource>(),
+                transform.position,
+                new Quaternion(0, 0, 0, 0)
+            );
+            _explosionSound.Play();
+            Destroy(_explosionSound.gameObject, 5f);
         }
     }
 
