@@ -64,7 +64,7 @@ public class ProjectileController : NetworkBehaviour {
             {
                 diff = (go.transform.position - transform.position).sqrMagnitude;
 
-                if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 30)
+                if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 15)
                 {
                     distance = diff;
                     target = go.transform;
@@ -108,7 +108,7 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(gameObject);
         }
 
-        if (homing && target != null && Time.fixedTime % 0.01 == 0) {
+        if (homing && target != null && System.DateTime.Now.Millisecond % 10 == 0) {
             Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
 
             Debug.Log(target);
