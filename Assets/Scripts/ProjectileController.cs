@@ -134,7 +134,9 @@ public class ProjectileController : NetworkBehaviour {
 
     void OnCollisionEnter(Collision collision) {
 
-        bounces -= 1;
+        if (collision.collider.tag != "Shield") {
+            bounces -= 1;
+        }
 
         gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
 
