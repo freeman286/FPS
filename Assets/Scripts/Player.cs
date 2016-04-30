@@ -213,6 +213,7 @@ public class Player : NetworkBehaviour {
         }
          
         rb.velocity = Vector3.zero;
+        rb.mass = 0.5f;
 
         cam.transform.position = gameObject.transform.position;
         cam.transform.parent = gameObject.transform;

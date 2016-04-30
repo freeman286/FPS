@@ -167,9 +167,16 @@ public class ProjectileController : NetworkBehaviour {
 
     public void Hit(Collision _collision) {
         if (_collision.collider.tag == "Player" || _collision.collider.tag == "Weapon") {
+
+            if (rb.mass > 3) {
+                _collision.collider.transform.root.GetComponent<Rigidbody>().mass += rb.mass / 10;
+            }
+
+            Destroy(collider);
             Destroy(rb);
             transform.position = _collision.collider.transform.position;
             transform.SetParent(_collision.collider.transform);
+            
         }
 
         if (_collision.collider.tag == "Weapon") {

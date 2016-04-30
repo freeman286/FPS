@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField]
-    private float speed = 2f;
+    private float speed;
     
 
     public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
