@@ -101,9 +101,4 @@ public class PlayerController : MonoBehaviour
         walking.Play("Walking");
     }
 
-    void OnCollisionEnter(Collision collision) {
-        if (collision.collider.tag == "Projectile") {
-            collision.collider.GetComponent<ProjectileController>().Explode(collision);
-        }
-    }
 }
