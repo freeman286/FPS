@@ -54,12 +54,13 @@ public class PlayerShoot : NetworkBehaviour {
                 currentBurst = 0;
             }
         } else if (currentWeapon.burst > 1) {
-            if (Input.GetButtonDown("Fire1") && currentBurst == 0 && !weaponManager.IsReloading()) {
+            if (Input.GetButtonDown("Fire1") && currentBurst == 0 && !weaponManager.IsReloading() && shootCooldown > currentWeapon.shootCooldown) {
                 InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
             }
 
             if (currentBurst >= currentWeapon.burst) {
                 CancelInvoke("Shoot");
+                shootCooldown = 0;
                 currentBurst = 0;
             }
         } else if (currentWeapon.fireRate > 0) {
