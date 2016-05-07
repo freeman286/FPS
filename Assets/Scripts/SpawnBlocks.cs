@@ -25,7 +25,7 @@ public class SpawnBlocks : NetworkBehaviour {
             GameObject _block = blocks[Random.Range(0, blocks.Length)];
             x = 0;
             z = 0;
-            while (!(x <= -_block.transform.localScale.x * 2 || x >= _block.transform.localScale.x * 2) || !(z <= -_block.transform.localScale.z * 2 || z >= _block.transform.localScale.z * 2)) {
+            while (!(x < -_block.transform.localScale.x * 2 || x > _block.transform.localScale.x * 2) || !(z < -_block.transform.localScale.z * 2 || z > _block.transform.localScale.z * 2)) {
                 x = Random.Range(-28, 28);
                 z = Random.Range(-28, 28);
             }
