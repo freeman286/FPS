@@ -33,6 +33,8 @@ public class PlayerShoot : NetworkBehaviour {
 
     public int currentBurst = 0;
 
+    private int barrel = 0;
+
     void Start() {
         if (cam == null)
         {
@@ -97,18 +99,18 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     [Command]
-    void CmdOnShoot (Vector3 _pos, Vector3 _port, Quaternion _rot) {
-        RpcDoShootEffect(_pos);
+    void CmdOnShoot(Vector3 _pos, Vector3 _port, Quaternion _rot, int _barrel) {
+        RpcDoShootEffect(_pos, _barrel);
         if (_port != Vector3.zero) {
             RpcDoCasingEffect(_port, _rot);
         }
     }
 
     [ClientRpc]
-    void RpcDoShootEffect(Vector3 _pos) {
+    void RpcDoShootEffect(Vector3 _pos, int _barrel) {
 
         if (!weaponManager.IsMelee())  {
-            weaponManager.GetCurrentFirePoint().GetComponentInChildren<ParticleSystem>().Play();
+            weaponManager.GetCurrentFirePoint().transform.GetChild(_barrel).GetComponent<ParticleSystem>().Play();
         }
         
         AudioSource _shootSound = (AudioSource)Instantiate(
@@ -153,11 +155,16 @@ public class PlayerShoot : NetworkBehaviour {
         shooting = 0;
         currentBurst += 1;
 
+        barrel += 1;
+
+        if (barrel == currentWeapon.barrels) {
+            barrel = 0;
+        }
 
         if (weaponManager.GetCurrentEjectionPort() != null) {
-            CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation);
+            CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation, barrel);
         } else {
-            CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation);
+            CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation, barrel);
         }
 
         float _devience;
@@ -201,10 +208,8 @@ public class PlayerShoot : NetworkBehaviour {
 
                 RaycastHit _hit;
 
-                if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask))
-                {
-                    if (_hit.collider.tag == "Player")
-                    {
+                if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask)) {
+                    if (_hit.collider.tag == "Player") {
 
                         string[] crits = { "Skull", "RightEye", "LeftEye" };
 

@@ -32,5 +32,7 @@ public class PlayerWeapon : MonoBehaviour{
     public GameObject ejectionPort;
     public GameObject casing;
 
+    public int barrels;
+
     public bool primary;
 }
