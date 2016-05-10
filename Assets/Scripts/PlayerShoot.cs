@@ -187,7 +187,7 @@ public class PlayerShoot : NetworkBehaviour {
 
         barrel += 1;
 
-        if (barrel == currentWeapon.barrels) {
+        if (barrel > currentWeapon.barrels - 1) {
             barrel = 0;
         }
 
