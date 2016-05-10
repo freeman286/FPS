@@ -21,7 +21,7 @@ public class PlayerShoot : NetworkBehaviour {
 
     private GameObject shootSound;
 
-    private int shootCooldown = 200;
+    private float shootCooldown = 200;
 
     [SerializeField]
     private PlayerMotor motor;
@@ -34,11 +34,12 @@ public class PlayerShoot : NetworkBehaviour {
 
     private int shooting = 100;
 
-    private int altShooting = 100;
+    public bool daulGun = false;
 
     public int currentBurst = 0;
 
     private int barrel = 0;
+
 
     void Start() {
         if (cam == null)
@@ -54,6 +55,11 @@ public class PlayerShoot : NetworkBehaviour {
                 
         currentWeapon = weaponManager.GetCurrentWeapon();
         shootCooldown += 1;
+
+        if (weaponManager.IsDualWielding() && currentWeapon.shootCooldown < 20) {
+            shootCooldown += 0.2f;
+        }
+
         if (currentWeapon.fireRate <= 0 && shootCooldown > currentWeapon.shootCooldown) {
             if (Input.GetButtonDown("Fire1")) {
                 Shoot();
@@ -80,8 +86,9 @@ public class PlayerShoot : NetworkBehaviour {
             currentBurst = 0;
         }
 
-        if (!weaponManager.IsMelee()) {
-            if (shooting < currentWeapon.shootCooldown / 6) {
+        if (!weaponManager.IsMelee() && !daulGun) {
+            if ((shooting < currentWeapon.shootCooldown / 6 && !weaponManager.IsDualWielding()) || (shooting < currentWeapon.shootCooldown / 12))
+            {
                 weaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
                 altWeaponHolder.transform.Rotate(2, 0, 0 * Time.deltaTime);
             }
@@ -92,6 +99,19 @@ public class PlayerShoot : NetworkBehaviour {
             else if (!weaponManager.Swapping() && !weaponManager.IsReloading()) {
                 weaponHolder.transform.rotation = cam.transform.rotation;
                 altWeaponHolder.transform.rotation = weaponHolder.transform.rotation;
+            }
+        } else if (!weaponManager.IsMelee()) {
+            if ((shooting < currentWeapon.shootCooldown / 6 && !weaponManager.IsDualWielding()) || (shooting < currentWeapon.shootCooldown / 12))
+            {
+                altWeaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
+            }
+            else if (shooting < currentWeapon.shootCooldown)
+            {
+                altWeaponHolder.transform.Rotate(-0.33333333333f, 0, 0 * Time.deltaTime);
+            }
+            else if (!weaponManager.Swapping() && !weaponManager.IsReloading()) {
+                weaponHolder.transform.rotation = cam.transform.rotation;
+                altWeaponHolder.transform.rotation = cam.transform.rotation;
             }
         }
 
@@ -104,18 +124,20 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     [Command]
-    void CmdOnShoot(Vector3 _pos, Vector3 _port, Quaternion _rot, int _barrel) {
-        RpcDoShootEffect(_pos, _barrel);
+    void CmdOnShoot(Vector3 _pos, Vector3 _port, Quaternion _rot, int _barrel, bool _alt) {
+        RpcDoShootEffect(_pos, _barrel, _alt);
         if (_port != Vector3.zero) {
             RpcDoCasingEffect(_port, _rot);
         }
     }
 
     [ClientRpc]
-    void RpcDoShootEffect(Vector3 _pos, int _barrel) {
+    void RpcDoShootEffect(Vector3 _pos, int _barrel, bool _alt) {
 
-        if (!weaponManager.IsMelee())  {
+        if (!weaponManager.IsMelee() && !_alt)  {
             weaponManager.GetCurrentFirePoint().transform.GetChild(_barrel).GetComponent<ParticleSystem>().Play();
+        } else if (!weaponManager.IsMelee()) {
+            weaponManager.GetAltCurrentFirePoint().transform.GetChild(_barrel).GetComponent<ParticleSystem>().Play();
         }
         
         AudioSource _shootSound = (AudioSource)Instantiate(
@@ -148,6 +170,9 @@ public class PlayerShoot : NetworkBehaviour {
     [Client]
     void Shoot() {
 
+        if (currentBurst == 0 && weaponManager.IsDualWielding()) {
+            daulGun = !daulGun;
+        }
 
         if (!isLocalPlayer || !weaponManager.CanShoot()) {
             return;
@@ -167,16 +192,16 @@ public class PlayerShoot : NetworkBehaviour {
         }
 
         if (weaponManager.GetCurrentEjectionPort() != null) {
-            CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation, barrel);
+            CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation, barrel, daulGun);
         } else {
-            CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation, barrel);
+            CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation, barrel, daulGun);
         }
 
         float _devience;
 
         if (!motor.IsGrounded()) {
             _devience = currentWeapon.spreadWhileJumping;
-        } else if (motor.IsMoving()) {  
+        } else if (motor.IsMoving() || weaponManager.IsDualWielding()) {  
             _devience = currentWeapon.spreadWhileMoving;
         } else {
             _devience = currentWeapon.spread;

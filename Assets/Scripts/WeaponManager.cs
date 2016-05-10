@@ -28,6 +28,8 @@ public class WeaponManager : NetworkBehaviour
 
     private GameObject currentFirePoint;
 
+    private GameObject altCurrentFirePoint;
+
     private GameObject currentEjectionPort;
 
     private GameObject altCurrentEjectionPort;
@@ -42,7 +44,7 @@ public class WeaponManager : NetworkBehaviour
 
     private int secondaryMagsize;
 
-    private int swapping = 20;
+    public int swapping = 20;
 
     private int reloading = 100;
 
@@ -76,6 +78,9 @@ public class WeaponManager : NetworkBehaviour
     public void FillMags() {
         primaryMagsize = primaryWeapon.magSize;
         secondaryMagsize = secondaryWeapon.magSize;
+        if (dualWielding) {
+            secondaryMagsize *= 2;
+        }
     }
 
 
@@ -132,6 +137,11 @@ public class WeaponManager : NetworkBehaviour
         return currentFirePoint;
     }
 
+    public GameObject GetAltCurrentFirePoint()
+    {
+        return altCurrentFirePoint;
+    }
+
     public GameObject GetcurrentShootSound()
     {
         return currentWeapon.shootSound;
@@ -152,6 +162,10 @@ public class WeaponManager : NetworkBehaviour
 
     public bool IsMelee() {
         return currentWeapon.meleeWeapon;
+    }
+
+    public bool IsDualWielding() {
+        return !currentWeapon.primary && dualWielding;
     }
 
     public void EquipPrimary() {
@@ -201,6 +215,8 @@ public class WeaponManager : NetworkBehaviour
                 Util.SetLayerRecursively(_altWeaponIns, LayerMask.NameToLayer(weaponLayerName));
                 Util.SetLayerRecursively(_altFirePoint, LayerMask.NameToLayer(weaponLayerName));
             }
+
+            altCurrentFirePoint = _altFirePoint;
         }
 
         currentGraphics = _weapon.GetComponent<WeaponGraphics>();
@@ -327,8 +343,12 @@ public class WeaponManager : NetworkBehaviour
         }
         if (currentWeapon == secondaryWeapon && secondaryMagsize != secondaryWeapon.magSize && reloading == secondaryWeapon.reloadTime) {
             secondaryMagsize = secondaryWeapon.magSize;
+            if (dualWielding) {
+                secondaryMagsize *= 2;
+            }
             PlayReloadSound();
         }
+
 
         if (reloading < currentWeapon.reloadTime / 2)
         {
@@ -346,8 +366,7 @@ public class WeaponManager : NetworkBehaviour
             return;
         }
 
-        if (currentWeapon == primaryWeapon)
-        {
+        if (currentWeapon == primaryWeapon) {
             primaryMagsize -= 1;
         }
         else {
