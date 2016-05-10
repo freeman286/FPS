@@ -136,6 +136,8 @@ public class ProjectileController : NetworkBehaviour {
 
         if (collision.collider.tag != "Shield") {
             bounces -= 1;
+        } else {
+            playerID = collision.collider.transform.root.name;
         }
 
         gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);

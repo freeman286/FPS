@@ -50,7 +50,7 @@ public class WeaponManager : NetworkBehaviour
 
     private int hitting = 100;
 
-    private bool dualWielding;
+    private bool dualWielding = false;
 
     public PlayerWeapon[] allWeapons;
 
@@ -88,7 +88,7 @@ public class WeaponManager : NetworkBehaviour
 
         if (player.timeSinceSpawned == -1) {
             foreach (var _playerID in GameManager.players.Keys) {
-                CmdSwitchingWeapons(GameManager.players[_playerID].transform.name, GameManager.players[_playerID].GetComponent<WeaponManager>().currentWeapon.name, "");
+                CmdSwitchingWeapons(GameManager.players[_playerID].transform.name, GameManager.players[_playerID].GetComponent<WeaponManager>().currentWeapon.name, "", false);
             }
         }
 
@@ -169,11 +169,11 @@ public class WeaponManager : NetworkBehaviour
     }
 
     public void EquipPrimary() {
-        EquipWeapon(primaryWeapon);
+        EquipWeapon(primaryWeapon, false);
     }
 
     [Client]
-    void EquipWeapon(PlayerWeapon _weapon) {
+    void EquipWeapon(PlayerWeapon _weapon, bool _dualWielding) {
 
         foreach (Transform child in weaponHolder) {
             if (child != altWeaponHolder) {
@@ -199,7 +199,7 @@ public class WeaponManager : NetworkBehaviour
             currentEjectionPort = _ejectionPort;
         }
 
-        if (dualWielding && !currentWeapon.primary) {
+        if (_dualWielding && !currentWeapon.primary) {
             GameObject _altWeaponIns = (GameObject)Instantiate(_weapon.graphics, altWeaponHolder.position, altWeaponHolder.rotation);
             _altWeaponIns.transform.SetParent(altWeaponHolder);
             GameObject _altFirePoint = (GameObject)Instantiate(_weapon.firePoint, altWeaponHolder.position, altWeaponHolder.rotation);
@@ -244,7 +244,7 @@ public class WeaponManager : NetworkBehaviour
     void SwitchingWeapons() {
 
         if (swapping == 10) {
-            CmdSwitchingWeapons(transform.name, primaryWeapon.name, secondaryWeapon.name);
+            CmdSwitchingWeapons(transform.name, primaryWeapon.name, secondaryWeapon.name, dualWielding);
             PlayWeaponSwapSound();
         }
 
@@ -260,15 +260,15 @@ public class WeaponManager : NetworkBehaviour
     }
 
     [Command]
-    void CmdSwitchingWeapons(string _playerID, string _primaryWeapon, string _secondaryWeapon) {
+    void CmdSwitchingWeapons(string _playerID, string _primaryWeapon, string _secondaryWeapon, bool _dualWielding) {
 
         Player _player = GameManager.GetPlayer(_playerID);
 
-        _player.weaponManager.RpcRemoteSwitchingWeapons(_player.weaponManager.currentWeapon.name, _primaryWeapon, _secondaryWeapon);
+        _player.weaponManager.RpcRemoteSwitchingWeapons(_player.weaponManager.currentWeapon.name, _primaryWeapon, _secondaryWeapon, _dualWielding);
     }
 
     [ClientRpc]
-    public void RpcRemoteSwitchingWeapons(string _currentWeapon, string _primaryWeapon, string _secondaryWeapon) {
+    public void RpcRemoteSwitchingWeapons(string _currentWeapon, string _primaryWeapon, string _secondaryWeapon, bool _dualWielding) {
 
         if (_secondaryWeapon != "")
         {
@@ -285,15 +285,15 @@ public class WeaponManager : NetworkBehaviour
             }
             if (_currentWeapon == _primaryWeapon)
             {
-                EquipWeapon(secondaryWeapon);
+                EquipWeapon(secondaryWeapon, _dualWielding);
             }
             else {
-                EquipWeapon(primaryWeapon);
+                EquipWeapon(primaryWeapon, _dualWielding);
             }
         } else {
             foreach (var weapon in allWeapons) {
                 if (weapon.name == _currentWeapon) {
-                    EquipWeapon(weapon);
+                    EquipWeapon(weapon, _dualWielding);
                 }
             }
 
