@@ -29,7 +29,12 @@ public class PlayerShoot : NetworkBehaviour {
     [SerializeField]
     private Transform weaponHolder;
 
+    [SerializeField]
+    private Transform altWeaponHolder;
+
     private int shooting = 100;
+
+    private int altShooting = 100;
 
     public int currentBurst = 0;
 
@@ -76,17 +81,17 @@ public class PlayerShoot : NetworkBehaviour {
         }
 
         if (!weaponManager.IsMelee()) {
-            if (shooting < currentWeapon.shootCooldown / 6)
-            {
+            if (shooting < currentWeapon.shootCooldown / 6) {
                 weaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
+                altWeaponHolder.transform.Rotate(2, 0, 0 * Time.deltaTime);
             }
-            else if (shooting < currentWeapon.shootCooldown)
-            {
+            else if (shooting < currentWeapon.shootCooldown) {
                 weaponHolder.transform.Rotate(0.33333333333f, 0, 0 * Time.deltaTime);
+                altWeaponHolder.transform.Rotate(-0.33333333333f, 0, 0 * Time.deltaTime);
             }
-            else if (!weaponManager.Swapping() && !weaponManager.IsReloading())
-            {
+            else if (!weaponManager.Swapping() && !weaponManager.IsReloading()) {
                 weaponHolder.transform.rotation = cam.transform.rotation;
+                altWeaponHolder.transform.rotation = weaponHolder.transform.rotation;
             }
         }
 

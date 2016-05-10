@@ -11,6 +11,9 @@ public class WeaponManager : NetworkBehaviour
     private Transform weaponHolder;
 
     [SerializeField]
+    private Transform altWeaponHolder;
+
+    [SerializeField]
     private PlayerShoot shoot;
 
     public PlayerWeapon primaryWeapon;
@@ -26,6 +29,8 @@ public class WeaponManager : NetworkBehaviour
     private GameObject currentFirePoint;
 
     private GameObject currentEjectionPort;
+
+    private GameObject altCurrentEjectionPort;
 
     [SerializeField]
     private GameObject weaponSwapSound;
@@ -43,6 +48,8 @@ public class WeaponManager : NetworkBehaviour
 
     private int hitting = 100;
 
+    private bool dualWielding;
+
     public PlayerWeapon[] allWeapons;
 
     public Player player;
@@ -54,6 +61,7 @@ public class WeaponManager : NetworkBehaviour
         if (Camera.main.GetComponent<PlayerInfo>() != null) {
             primaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetPrimaryWeapon();
             secondaryWeapon = Camera.main.GetComponent<PlayerInfo>().GetSecondaryWeapon();
+            dualWielding = Camera.main.GetComponent<PlayerInfo>().DualWielding();
         }
     }
 
@@ -133,6 +141,11 @@ public class WeaponManager : NetworkBehaviour
         return currentEjectionPort;
     }
 
+    public GameObject GetAltCurrentEjectionPort()
+    {
+        return altCurrentEjectionPort;
+    }
+
     public GameObject GetCurrentCasing() {
         return currentWeapon.casing;
     }
@@ -148,7 +161,13 @@ public class WeaponManager : NetworkBehaviour
     [Client]
     void EquipWeapon(PlayerWeapon _weapon) {
 
-        foreach (Transform child in weaponHolder)
+        foreach (Transform child in weaponHolder) {
+            if (child != altWeaponHolder) {
+                Destroy(child.gameObject);
+            }
+        }
+
+        foreach (Transform child in altWeaponHolder)
         {
             Destroy(child.gameObject);
         }
@@ -164,6 +183,24 @@ public class WeaponManager : NetworkBehaviour
             _portHolder.transform.SetParent(weaponHolder);
             GameObject _ejectionPort = _portHolder.transform.GetChild(0).gameObject;
             currentEjectionPort = _ejectionPort;
+        }
+
+        if (dualWielding && !currentWeapon.primary) {
+            GameObject _altWeaponIns = (GameObject)Instantiate(_weapon.graphics, altWeaponHolder.position, altWeaponHolder.rotation);
+            _altWeaponIns.transform.SetParent(altWeaponHolder);
+            GameObject _altFirePoint = (GameObject)Instantiate(_weapon.firePoint, altWeaponHolder.position, altWeaponHolder.rotation);
+            _altFirePoint.transform.SetParent(altWeaponHolder);
+            if (_weapon.portHolder != null) {
+                GameObject _altPortHolder = (GameObject)Instantiate(_weapon.portHolder, altWeaponHolder.position, altWeaponHolder.rotation);
+                _altPortHolder.transform.SetParent(altWeaponHolder);
+                GameObject _altEjectionPort = _altPortHolder.transform.GetChild(0).gameObject;
+                altCurrentEjectionPort = _altEjectionPort;
+            }
+
+            if (isLocalPlayer) {
+                Util.SetLayerRecursively(_altWeaponIns, LayerMask.NameToLayer(weaponLayerName));
+                Util.SetLayerRecursively(_altFirePoint, LayerMask.NameToLayer(weaponLayerName));
+            }
         }
 
         currentGraphics = _weapon.GetComponent<WeaponGraphics>();

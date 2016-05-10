@@ -24,6 +24,8 @@ public class PlayerWeapon : MonoBehaviour{
 
     public bool meleeWeapon;
 
+    public bool dualWieldable;
+
     public GameObject graphics;
     public GameObject shootSound;
     public GameObject firePoint;
