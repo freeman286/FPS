@@ -175,6 +175,8 @@ public class WeaponManager : NetworkBehaviour
     [Client]
     void EquipWeapon(PlayerWeapon _weapon, bool _dualWielding) {
 
+        shoot.daulGun = false;
+
         foreach (Transform child in weaponHolder) {
             if (child != altWeaponHolder) {
                 Destroy(child.gameObject);
