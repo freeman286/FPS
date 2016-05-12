@@ -177,6 +177,11 @@ public class PlayerShoot : NetworkBehaviour {
 
         if (currentBurst == 0 && weaponManager.IsDualWielding()) {
             daulGun = !daulGun;
+            if (daulGun) {
+                barrel += 1;
+            }
+        } else {
+            barrel += 1;
         }
 
         if (!isLocalPlayer || !weaponManager.CanShoot()) {
@@ -190,7 +195,6 @@ public class PlayerShoot : NetworkBehaviour {
         shooting = 0;
         currentBurst += 1;
 
-        barrel += 1;
 
         if (barrel > currentWeapon.barrels - 1) {
             barrel = 0;
