@@ -78,7 +78,12 @@ public class PlayerShoot : NetworkBehaviour {
             }
         } else if (currentWeapon.fireRate > 0) {
             if (Input.GetButtonDown("Fire1")) {
-                InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
+                if (weaponManager.IsDualWielding()) {
+                    InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate / 2);
+                }
+                else {
+                    InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
+                }
             }
             else if (Input.GetButtonUp("Fire1")) {
                 CancelInvoke("Shoot");

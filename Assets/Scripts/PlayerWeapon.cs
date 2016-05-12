@@ -10,7 +10,7 @@ public class PlayerWeapon : MonoBehaviour{
     public int roundsPerShot;
     public int burst = 1;
     public int force;
-
+    public float speed = 1;
 
     public float fireRate;
     public float spread;

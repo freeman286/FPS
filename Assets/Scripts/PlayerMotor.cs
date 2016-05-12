@@ -60,7 +60,7 @@ public class PlayerMotor : MonoBehaviour {
 
     void PerformMovement() {
         if (velocity != Vector3.zero) {
-            rb.MovePosition(rb.position + (rb.velocity + velocity) * Time.fixedDeltaTime / (Mathf.Pow(1.25f, (rb.mass * 2) - 1)));
+            rb.MovePosition(rb.position + (rb.velocity + velocity) * weaponManager.GetCurrentWeapon().speed * Time.fixedDeltaTime / (Mathf.Pow(1.25f, (rb.mass * 2) - 1)));
         }
     }
 
