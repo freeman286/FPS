@@ -23,6 +23,9 @@ public class Player : NetworkBehaviour {
     private int currentHealth;
 
     [SyncVar]
+    public string lastDamage;
+
+    [SyncVar]
     private int healthRegen = 0;
 
     [SerializeField]
@@ -95,6 +98,9 @@ public class Player : NetworkBehaviour {
     void Update () {
         if (rb.position.y < -10 && !isDead) {
             Die();
+            if (lastDamage != transform.name) {
+                GameManager.GetPlayer(lastDamage).kills += 1;
+            }
         }
         healthRegen += 1;
         if (healthRegen > 300 && currentHealth < maxHealth) {
@@ -125,6 +131,8 @@ public class Player : NetworkBehaviour {
     public void RpcTakeDamage(int _amount, string _shooterID) {
         if (isDead || _amount < 0)
             return;
+
+        lastDamage = _shooterID;
 
         if (isLocalPlayer && _amount != 0) {
             AudioSource _dingSound = (AudioSource)Instantiate(
@@ -215,6 +223,8 @@ public class Player : NetworkBehaviour {
         if (timeSinceSpawned > 0) {
             timeSinceSpawned = 0;
         }
+
+        lastDamage = transform.name;
          
         rb.velocity = Vector3.zero;
         rb.mass = 0.5f;
