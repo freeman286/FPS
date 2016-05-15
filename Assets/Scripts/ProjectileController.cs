@@ -98,6 +98,9 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         if ((framesSinceCreated > life || (!explosive && !sticky && bounces < 1)) && !impacts) {
+            if (explosive) {
+                ExplodeInAir();
+            }
             Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
             Destroy(gameObject);
@@ -118,17 +121,7 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         if (System.DateTime.Now.Millisecond % 20 == 0 && homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
-            exploding = true;
-            GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
-            Destroy(_impact, 10f);
-            Destroy(gameObject, Time.deltaTime);
-            AudioSource _explosionSound = (AudioSource)Instantiate(
-                explosionSound.GetComponent<AudioSource>(),
-                transform.position,
-                new Quaternion(0, 0, 0, 0)
-            );
-            _explosionSound.Play();
-            Destroy(_explosionSound.gameObject, 5f);
+            ExplodeInAir();
         }
     }
 
@@ -156,6 +149,20 @@ public class ProjectileController : NetworkBehaviour {
     public void Explode (Collision _collision) {
         exploding = true;
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
+        Destroy(_impact, 10f);
+        Destroy(gameObject, Time.deltaTime);
+        AudioSource _explosionSound = (AudioSource)Instantiate(
+            explosionSound.GetComponent<AudioSource>(),
+            transform.position,
+            new Quaternion(0, 0, 0, 0)
+        );
+        _explosionSound.Play();
+        Destroy(_explosionSound.gameObject, 5f);
+    }
+
+    public void ExplodeInAir() {
+        exploding = true;
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
         Destroy(_impact, 10f);
         Destroy(gameObject, Time.deltaTime);
         AudioSource _explosionSound = (AudioSource)Instantiate(
