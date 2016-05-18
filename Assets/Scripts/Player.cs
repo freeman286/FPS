@@ -165,7 +165,7 @@ public class Player : NetworkBehaviour {
         isDead = true;
 
         if (weaponManager.IsDualWielding()) {
-            weaponManager.EquipPrimary();
+            weaponManager.StopDualWielding();
         }
 
         shoot.CancelInvoke("Shoot");

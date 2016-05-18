@@ -172,6 +172,10 @@ public class WeaponManager : NetworkBehaviour
         EquipWeapon(primaryWeapon, false);
     }
 
+    public void StopDualWielding() {
+        CmdSwitchingWeapons(transform.name, primaryWeapon.name, "", false);
+    }
+
     [Client]
     void EquipWeapon(PlayerWeapon _weapon, bool _dualWielding) {
 
