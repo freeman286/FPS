@@ -45,6 +45,9 @@ public class Player : NetworkBehaviour {
     private Camera cam;
 
     [SerializeField]
+    private GameObject weaponHolder;
+
+    [SerializeField]
     GameObject playerUIPrefab;
     private GameObject playerUIInstance;
 
@@ -172,6 +175,7 @@ public class Player : NetworkBehaviour {
 
         Destroy(playerUIInstance);
 
+        weaponHolder.transform.parent = transform;
         cam.transform.parent = rigidbodyOnDeath[0].transform;
 
         RemoveProjectilesRecursively(cam.transform);
@@ -213,8 +217,6 @@ public class Player : NetworkBehaviour {
             trans.rotation = _spawnPoint.rotation;
         }
 
-        rigidbodyOnDeath[4].transform.rotation = cam.transform.rotation;
-
     }
 
     public void SetDefaults() {
@@ -231,6 +233,8 @@ public class Player : NetworkBehaviour {
 
         cam.transform.position = gameObject.transform.position;
         cam.transform.parent = gameObject.transform;
+        weaponHolder.transform.parent = cam.transform;
+        weaponHolder.transform.rotation = cam.transform.rotation;
 
         weaponManager.FillMags();
         weaponManager.EquipPrimary();
