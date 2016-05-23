@@ -35,6 +35,7 @@ public class Player : NetworkBehaviour {
     public GameObject[] rigidbodyOnDeath;
     public float[] x;
     public float[] y;
+    public float[] z;
 
     private Transform trans;
 
@@ -46,6 +47,9 @@ public class Player : NetworkBehaviour {
 
     [SerializeField]
     private GameObject weaponHolder;
+
+    [SerializeField]
+    private GameObject altWeaponHolder;
 
     [SerializeField]
     GameObject playerUIPrefab;
@@ -85,7 +89,9 @@ public class Player : NetworkBehaviour {
         Color _color = new Color(r, g, b);
 
         for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++) {
-            rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
+            if (rigidbodyOnDeath[i].GetComponent<Renderer>() != null) {
+                rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
+            }
         }
 
         
@@ -167,21 +173,18 @@ public class Player : NetworkBehaviour {
 
         isDead = true;
 
-        if (weaponManager.IsDualWielding()) {
-            weaponManager.StopDualWielding();
-        }
-
         shoot.CancelInvoke("Shoot");
 
         Destroy(playerUIInstance);
 
         weaponHolder.transform.parent = transform;
+        altWeaponHolder.transform.parent = transform;
         cam.transform.parent = rigidbodyOnDeath[0].transform;
 
         RemoveProjectilesRecursively(cam.transform);
 
-        string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder" };
-        float[] _mass = { 3f, 2f, 2f, 2f, 2f };
+        string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder", "AltWeaponHolder" };
+        float[] _mass = { 3f, 2f, 2f, 2f, 2f, 2f };
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             Rigidbody rigidbody = rigidbodyOnDeath[i].AddComponent<Rigidbody>();
@@ -205,17 +208,20 @@ public class Player : NetworkBehaviour {
     private IEnumerator Respawn () {
         yield return new WaitForSeconds(GameManager.instance.matchSettings.respawnTime);
 
-        SetDefaults();
         Transform _spawnPoint = NetworkManager.singleton.GetStartPosition();
         transform.position = _spawnPoint.position;
         transform.rotation = _spawnPoint.rotation;
 
-        for (int i = 0; i < rigidbodyOnDeath.Length; i++)
-        {
+        for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             trans = rigidbodyOnDeath[i].GetComponent<Transform>();
-            trans.position = _spawnPoint.position + new Vector3(x[i], y[i], 0);
+            trans.position = _spawnPoint.position + new Vector3(x[i], y[i], z[i]);
             trans.rotation = _spawnPoint.rotation;
         }
+
+        SetDefaults();
+
+        // Overide altWeaponHolder position
+        altWeaponHolder.transform.localPosition = new Vector3(-0.912f, 0, 0);
 
     }
 
@@ -235,6 +241,7 @@ public class Player : NetworkBehaviour {
         cam.transform.parent = gameObject.transform;
         weaponHolder.transform.parent = cam.transform;
         weaponHolder.transform.rotation = cam.transform.rotation;
+        altWeaponHolder.transform.parent = weaponHolder.transform;
 
         weaponManager.FillMags();
         weaponManager.EquipPrimary();
