@@ -30,9 +30,9 @@ public class PlayerSetup : NetworkBehaviour {
             }
 
             SetLayerRecursively(playerGraphics, LayerMask.NameToLayer(dontDrawLayerName));
+            GetComponent<Player>().PlayerSetup();
         }
-
-        GetComponent<Player>().Setup();
+        GetComponent<Player>().ExteriorSetup();
     }
 
     void SetLayerRecursively(GameObject obj, int newLayer) {

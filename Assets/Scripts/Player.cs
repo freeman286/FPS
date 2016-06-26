@@ -74,28 +74,41 @@ public class Player : NetworkBehaviour {
     [SyncVar]
     public int timeSinceSpawned = -1;
 
-    public void Setup () {
-
+    public void ExteriorSetup() {
         float r = 0;
         float g = 0;
         float b = 0;
 
         Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-        while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f))) {
+        while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f)))
+        {
             r = Random.Range(0.1f, 1.0f);
             b = Random.Range(0.1f, 1.0f);
             g = Random.Range(0.1f, 1.0f);
         }
         Color _color = new Color(r, g, b);
 
-        for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++) {
-            if (rigidbodyOnDeath[i].GetComponent<Renderer>() != null) {
+        for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++)
+        {
+            if (rigidbodyOnDeath[i].GetComponent<Renderer>() != null)
+            {
                 rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
             }
         }
 
-        
+        cam.transform.position = gameObject.transform.position;
+        cam.transform.parent = gameObject.transform;
+        weaponHolder.transform.parent = cam.transform;
+        weaponHolder.transform.rotation = cam.transform.rotation;
+        altWeaponHolder.transform.parent = weaponHolder.transform;
 
+        weaponManager.FillMags();
+        weaponManager.EquipPrimary();
+        shoot.currentBurst = 0;
+        controller.Reset();
+    }
+
+    public void PlayerSetup() {
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < wasEnabled.Length; i++) {
             wasEnabled[i] = disableOnDeath[i].enabled;
@@ -211,6 +224,10 @@ public class Player : NetworkBehaviour {
         Transform _spawnPoint = NetworkManager.singleton.GetStartPosition();
         transform.position = _spawnPoint.position;
         transform.rotation = _spawnPoint.rotation;
+
+        for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
+            Destroy(rigidbodyOnDeath[i].GetComponent<Rigidbody>());
+        }
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             trans = rigidbodyOnDeath[i].GetComponent<Transform>();
