@@ -88,9 +88,16 @@ public class WeaponManager : NetworkBehaviour
 
         if (player.timeSinceSpawned == -1) {
             foreach (var _playerID in GameManager.players.Keys) {
-                CmdSwitchingWeapons(GameManager.players[_playerID].transform.name, GameManager.players[_playerID].GetComponent<WeaponManager>().currentWeapon.name, "", false);
+                CmdSwitchingWeapons(GameManager.players[_playerID].transform.name, GameManager.players[_playerID].GetComponent<WeaponManager>().currentWeapon.name, "", false);              
             }
+            currentWeapon = secondaryWeapon;
+            swapping = 0;
+        } else if (player.timeSinceSpawned == 0) {
+            currentWeapon = secondaryWeapon;
+            swapping = 0;
         }
+
+
 
         if (Input.GetKeyDown(KeyCode.Q) && !IsReloading() && shoot.currentBurst == 0 && isLocalPlayer) {
             SwitchWeapon();
