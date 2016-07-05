@@ -19,7 +19,7 @@ public class PlayerInfo : MonoBehaviour {
     }
 
     void OnGUI() {
-        GUILayout.BeginArea(new Rect(10, 150, 200, 500));
+        GUILayout.BeginArea(new Rect(220, 15, 200, 500));
         GUILayout.BeginVertical();
 
         Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
@@ -42,6 +42,12 @@ public class PlayerInfo : MonoBehaviour {
                 primaryWeapon = weapons[i];
             }
         }
+
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+
+        GUILayout.BeginArea(new Rect(430, 15, 200, 500));
+        GUILayout.BeginVertical();
 
         Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
         if (secondaryWeapon == null) {
