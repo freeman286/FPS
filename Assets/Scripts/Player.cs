@@ -225,6 +225,8 @@ public class Player : NetworkBehaviour {
         transform.position = _spawnPoint.position;
         transform.rotation = _spawnPoint.rotation;
 
+        RemoveProjectilesRecursively(transform);
+
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             Destroy(rigidbodyOnDeath[i].GetComponent<Rigidbody>());
         }
