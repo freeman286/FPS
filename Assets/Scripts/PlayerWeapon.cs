@@ -24,6 +24,9 @@ public class PlayerWeapon : MonoBehaviour{
 
     public bool meleeWeapon;
 
+    public bool reflectable;
+    public BoxCollider col;
+
     public bool dualWieldable;
 
     public GameObject graphics;

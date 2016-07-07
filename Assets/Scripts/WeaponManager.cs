@@ -259,6 +259,7 @@ public class WeaponManager : NetworkBehaviour
         if (swapping == 10) {
             CmdSwitchingWeapons(transform.name, primaryWeapon.name, secondaryWeapon.name, dualWielding);
             PlayWeaponSwapSound();
+            hitting = 100;
         }
 
         if (swapping < 10)
@@ -415,17 +416,24 @@ public class WeaponManager : NetworkBehaviour
     }
 
     public void Hitting() {
-        if (hitting < currentWeapon.shootCooldown / 4)
-        {
+        if (hitting < currentWeapon.shootCooldown / 4){
             weaponHolder.transform.Rotate(12, 12, 0 * Time.deltaTime);
             weaponHolder.transform.Translate(-0.24f, 0, 0 * Time.deltaTime);
-        }
-        else if (hitting < currentWeapon.shootCooldown) {
+        } else if (hitting < currentWeapon.shootCooldown) {
             weaponHolder.transform.Rotate(-3, -3, 0 * Time.deltaTime);
             weaponHolder.transform.Translate(0.06f, 0, 0 * Time.deltaTime);
         } else if (!player.isDead) {
             weaponHolder.transform.rotation = cam.transform.rotation;
             weaponHolder.transform.position = cam.transform.position;
+        }
+
+        if (currentWeapon.reflectable) {
+            BoxCollider c = currentWeapon.col as BoxCollider;
+            if (hitting < currentWeapon.shootCooldown) {
+                c.size = new Vector3(10, c.size.y, c.size.z);
+            } else {
+                c.size = new Vector3(3, c.size.y, c.size.z);
+            }
         }
     }
 }
