@@ -10,6 +10,7 @@ public class GameManager : NetworkBehaviour {
 
     public MatchSettings matchSettings;
 
+
     void Awake () {
         if (instance != null) {
             Debug.Log("More than one GameManager in scene");
@@ -17,6 +18,9 @@ public class GameManager : NetworkBehaviour {
         else {
             instance = this;
         }
+
+        Random.seed = System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
+        matchSettings.gameMode = matchSettings.gameModes[Random.Range(0, matchSettings.gameModes.Length - 1)];
     }
 
     #region Player tracking
@@ -59,37 +63,59 @@ public class GameManager : NetworkBehaviour {
         GUILayout.Label("Frames per second:");
         GUILayout.Label((1.0f / Time.deltaTime).ToString());
 
-        GUILayout.Label("Players in game:");
-        foreach (string _playerID in players.Keys) {
+        if (matchSettings.gameMode == "Deathmatch") {
+            GUILayout.Label("Scores:");
+            foreach (string _playerID in players.Keys) {
 
-            float r = 0;
-            float g = 0;
-            float b = 0;
+                float r = 0;
+                float g = 0;
+                float b = 0;
 
-            Random.seed = int.Parse(Regex.Replace(_playerID, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-            while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f))) {
-                r = Random.Range(0.1f, 1.0f);
-                b = Random.Range(0.1f, 1.0f);
-                g = Random.Range(0.1f, 1.0f);
+                Random.seed = int.Parse(Regex.Replace(_playerID, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
+                while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f)))
+                {
+                    r = Random.Range(0.1f, 1.0f);
+                    b = Random.Range(0.1f, 1.0f);
+                    g = Random.Range(0.1f, 1.0f);
+                }
+                Color _color = new Color(r, g, b);
+
+                string _text = names[_playerID] + " Kills:" + players[_playerID].kills + " Deaths:" + players[_playerID].deaths;
+
+                if (players[_playerID].isDead)
+                {
+                    GUILayout.Label("<color=grey>" + _text + "</color>");
+                }
+                else if (players[_playerID].isDamaged)
+                {
+                    GUILayout.Label("<color=red>" + _text + "</color>");
+                }
+                else {
+                    GUILayout.Label("<color=#" + ColorToHex(_color) + ">" + _text + "</color>");
+
+                }
             }
-            Color _color = new Color(r, g, b);
+        } else if (matchSettings.gameMode == "Team Deathmatch") {
+            GUILayout.Label("Scores:");
 
-            string _text = names[_playerID] + " Kills:" + players[_playerID].kills + " Deaths:" + players[_playerID].deaths;
+            Color _red = new Color(1, 0, 0);
+            Color _blue = new Color(0, 0, 1);
 
-            if (players[_playerID].isDead) {
-                GUILayout.Label("<color=grey>" + _text + "</color>");
-            }
-            else if (players[_playerID].isDamaged) {    
-                GUILayout.Label("<color=red>" + _text + "</color>");
-            }
-            else {
-                GUILayout.Label("<color=#" + ColorToHex(_color) + ">" + _text + "</color>");
 
-            }   
+            GUILayout.Label("<color=#" + ColorToHex(_red) + ">" + "Red: " + 0 + "</color>");
+            GUILayout.Label("<color=#" + ColorToHex(_blue) + ">" + "Blue: " + 0 + "</color>");
         }
 
 
         GUILayout.EndVertical();    
+        GUILayout.EndArea();
+
+        GUILayout.BeginArea(new Rect(10, 10, Screen.width / 4, Screen.height - 200));
+        GUILayout.BeginVertical();
+
+        GUILayout.Label(matchSettings.gameMode);
+
+        GUILayout.EndVertical();
         GUILayout.EndArea();
     }
 

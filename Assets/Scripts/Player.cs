@@ -16,6 +16,8 @@ public class Player : NetworkBehaviour {
         get { return currentHealth != maxHealth; }
     }
 
+    public string team = "";
+
     [SerializeField]
     private int maxHealth = 100;
 
@@ -75,17 +77,28 @@ public class Player : NetworkBehaviour {
     public int timeSinceSpawned = -1;
 
     public void ExteriorSetup() {
+
         float r = 0;
         float g = 0;
         float b = 0;
 
-        Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-        while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f)))
-        {
-            r = Random.Range(0.1f, 1.0f);
-            b = Random.Range(0.1f, 1.0f);
-            g = Random.Range(0.1f, 1.0f);
+        if (GameManager.instance.matchSettings.gameMode == "Deathmatch") {
+            Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
+            while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f)))
+            {
+                r = Random.Range(0.1f, 1.0f);
+                b = Random.Range(0.1f, 1.0f);
+                g = Random.Range(0.1f, 1.0f);
+            }
+        } else if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
+            if (team == "Red")  {
+                r = 1f;
+            } else {
+                b = 1f;
+            }
         }
+
+
         Color _color = new Color(r, g, b);
 
         for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++)
@@ -112,6 +125,14 @@ public class Player : NetworkBehaviour {
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < wasEnabled.Length; i++) {
             wasEnabled[i] = disableOnDeath[i].enabled;
+        }
+
+        if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
+            if (GameManager.players.Count % 2 == 0) {
+                team = "Blue";
+            } else {
+                team = "Red";
+            }
         }
 
         SetDefaults();
