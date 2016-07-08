@@ -60,12 +60,10 @@ public class ProjectileController : NetworkBehaviour {
             rb.WakeUp();
         }
         if (homing) {
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-            {
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
                 diff = (go.transform.position - transform.position).sqrMagnitude;
 
-                if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 15)
-                {
+                if (diff < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 15) {
                     distance = diff;
                     target = go.transform;
                 }
@@ -75,8 +73,7 @@ public class ProjectileController : NetworkBehaviour {
             foreach (GameObject go in GameObject.FindGameObjectsWithTag("Decoy")) {
                 diff = (go.transform.position - transform.position).sqrMagnitude;
 
-                if (diff / 2 < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 60)
-                {
+                if (diff / 2 < distance && go.transform.root.name != playerID && Vector3.Angle(transform.forward, go.transform.position - transform.position) < 60) {
                     distance = diff;
                     target = go.transform;
                 }
@@ -131,6 +128,7 @@ public class ProjectileController : NetworkBehaviour {
             bounces -= 1;
         } else {
             playerID = collision.collider.transform.root.name;
+            target = null;
         }
 
         gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
