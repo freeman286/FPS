@@ -230,7 +230,7 @@ public class Player : NetworkBehaviour {
         altWeaponHolder.transform.parent = transform;
         cam.transform.parent = rigidbodyOnDeath[0].transform;
 
-        RemoveProjectilesRecursively(cam.transform);
+        RemoveProjectilesRecursively(transform);
 
         string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder", "AltWeaponHolder" };
         float[] _mass = { 3f, 2f, 2f, 2f, 2f, 2f };
@@ -260,8 +260,6 @@ public class Player : NetworkBehaviour {
         Transform _spawnPoint = NetworkManager.singleton.GetStartPosition();
         transform.position = _spawnPoint.position;
         transform.rotation = _spawnPoint.rotation;
-
-        RemoveProjectilesRecursively(transform);
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             Destroy(rigidbodyOnDeath[i].GetComponent<Rigidbody>());
