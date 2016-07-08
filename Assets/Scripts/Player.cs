@@ -91,7 +91,7 @@ public class Player : NetworkBehaviour {
                 g = Random.Range(0.1f, 1.0f);
             }
         } else if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
-            if (team == "Red")  {
+            if (GameManager.GetPlayer(transform.name).team == "Red")  {
                 r = 1f;
             } else {
                 b = 1f;
@@ -128,7 +128,22 @@ public class Player : NetworkBehaviour {
         }
 
         if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
-            if (GameManager.players.Count % 2 == 0) {
+
+            int _redCount = 0;
+            int _blueCount = 0;
+
+            foreach (string _playerID in GameManager.players.Keys)
+            {
+                if (GameManager.players[_playerID].team == "Red") {
+                    _redCount += 1;
+                } else {
+                    _blueCount += 1;
+                }
+
+
+            }
+
+            if (_redCount > _blueCount) {
                 team = "Blue";
             } else {
                 team = "Red";
@@ -187,7 +202,7 @@ public class Player : NetworkBehaviour {
             Destroy(_dingSound.gameObject, 1f);
         }
 
-        if (timeSinceSpawned > 100) {
+        if (timeSinceSpawned > 100 && !(GameManager.instance.matchSettings.gameMode == "Team Deathmatch" && GameManager.players[_shooterID].team == team)) {
             currentHealth -= _amount;
         }
 

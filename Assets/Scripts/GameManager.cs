@@ -55,6 +55,15 @@ public class GameManager : NetworkBehaviour {
     }
 
     void OnGUI () {
+
+        GUILayout.BeginArea(new Rect(10, 10, Screen.width / 4, Screen.height - 200));
+        GUILayout.BeginVertical();
+
+        GUILayout.Label(matchSettings.gameMode);
+
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+
         GUILayout.BeginArea(new Rect(10, 120, Screen.width / 4, Screen.height - 200));
         GUILayout.BeginVertical();
 
@@ -101,21 +110,25 @@ public class GameManager : NetworkBehaviour {
             Color _red = new Color(1, 0, 0);
             Color _blue = new Color(0, 0, 1);
 
+            int _redScore = 0;
+            int _blueScore = 0;
 
-            GUILayout.Label("<color=#" + ColorToHex(_red) + ">" + "Red: " + 0 + "</color>");
-            GUILayout.Label("<color=#" + ColorToHex(_blue) + ">" + "Blue: " + 0 + "</color>");
+            foreach (string _playerID in players.Keys) {
+                if (players[_playerID].team == "Red") {
+                    _redScore += players[_playerID].kills;
+                } else {
+                    _blueScore += players[_playerID].kills;
+                }
+
+                
+            }
+
+                GUILayout.Label("<color=#" + ColorToHex(_red) + ">" + "Red: " + _redScore + "</color>");
+            GUILayout.Label("<color=#" + ColorToHex(_blue) + ">" + "Blue: " + _blueScore + "</color>");
         }
 
 
         GUILayout.EndVertical();    
-        GUILayout.EndArea();
-
-        GUILayout.BeginArea(new Rect(10, 10, Screen.width / 4, Screen.height - 200));
-        GUILayout.BeginVertical();
-
-        GUILayout.Label(matchSettings.gameMode);
-
-        GUILayout.EndVertical();
         GUILayout.EndArea();
     }
 
