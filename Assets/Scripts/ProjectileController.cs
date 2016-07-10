@@ -14,6 +14,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public float damage;
 
+    public float range;
+
     public bool repeats;
 
     public float repeatCooldown;
@@ -183,6 +185,11 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(rb);
             transform.position = _collision.collider.transform.position;
             transform.SetParent(_collision.collider.transform);
+            if (_collision.collider.name == "Skull") {
+                _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage * 3), playerID);
+            } else {
+                _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage), playerID);
+            }
             
         }
 

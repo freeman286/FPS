@@ -172,12 +172,13 @@ public class Player : NetworkBehaviour {
 
                     float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
-                    if (_hit.transform.root.GetComponent<ProjectileController>().explosive) {
-                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(10 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
-                    } else if (_dist < 1.5f) {
-                        RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(3 - _dist, 2) * _hit.transform.root.GetComponent<ProjectileController>().damage), _hit.transform.root.GetComponent<ProjectileController>().playerID);
-                    }
+                    ProjectileController _projectile = _hit.transform.root.GetComponent<ProjectileController>();
 
+                    if (_projectile.explosive) {
+                        if (_projectile.range - _dist > 0) {
+                            RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(_projectile.range - _dist, 2) * _projectile.damage), _projectile.playerID);
+                        }
+                    }
                 }
             }
         }
