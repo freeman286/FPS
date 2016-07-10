@@ -231,8 +231,6 @@ public class Player : NetworkBehaviour {
         altWeaponHolder.transform.parent = transform;
         cam.transform.parent = rigidbodyOnDeath[0].transform;
 
-        RemoveProjectilesRecursively(transform);
-
         string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder", "AltWeaponHolder" };
         float[] _mass = { 3f, 2f, 2f, 2f, 2f, 2f };
 
