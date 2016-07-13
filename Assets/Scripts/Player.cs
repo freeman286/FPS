@@ -165,24 +165,6 @@ public class Player : NetworkBehaviour {
             currentHealth += 1;
         }
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
-        foreach (var _hit in hitColliders) {
-            if (_hit.transform.root.tag == "Projectile" || _hit.transform.root.tag == "Decoy")  {
-                if (_hit.transform.root.GetComponent<ProjectileController>().exploding || ! _hit.transform.root.GetComponent<ProjectileController>().explosive) {
-
-                    float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
-
-                    ProjectileController _projectile = _hit.transform.root.GetComponent<ProjectileController>();
-
-                    if (_projectile.explosive) {
-                        if (_projectile.range - _dist > 0) {
-                            RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(_projectile.range - _dist, 2) * _projectile.damage), _projectile.playerID);
-                        }
-                    }
-                }
-            }
-        }
-
         timeSinceSpawned += 1;
     }
 

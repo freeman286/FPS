@@ -98,7 +98,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if ((framesSinceCreated > life || (!explosive && !sticky && bounces < 1)) && !impacts) {
             if (explosive) {
-                ExplodeInAir();
+                Explode(Quaternion.identity);
             }
             Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
@@ -120,7 +120,7 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         if (System.DateTime.Now.Millisecond % 20 == 0 && homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
-            ExplodeInAir();
+            Explode(Quaternion.identity);
         }
     }
 
@@ -137,7 +137,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (bounces < 1) {
             if (explosive) {
-                Explode(collision);
+                Explode(Quaternion.LookRotation(collision.contacts[0].normal));
             } else if (sticky) {
                 Stick(collision);
             } else if (collision.collider.tag != "Projectile") {
@@ -146,23 +146,24 @@ public class ProjectileController : NetworkBehaviour {
         }
     }
 
-    public void Explode (Collision _collision) {
-        exploding = true;
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
-        Destroy(_impact, 10f);
-        Destroy(gameObject, Time.deltaTime);
-        AudioSource _explosionSound = (AudioSource)Instantiate(
-            explosionSound.GetComponent<AudioSource>(),
-            transform.position,
-            new Quaternion(0, 0, 0, 0)
-        );
-        _explosionSound.Play();
-        Destroy(_explosionSound.gameObject, 5f);
-    }
+    public void Explode (Quaternion _rot) {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
 
-    public void ExplodeInAir() {
-        exploding = true;
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
+        foreach (var _hit in hitColliders) {
+
+            if (_hit.transform.tag == "Player" && _hit.transform.GetComponent<Player>()) {
+
+                float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
+
+                if (range - _dist > 0) {
+                    _hit.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(range - _dist, 2) * damage), playerID);
+                }
+            }
+
+        }
+
+
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, _rot);
         Destroy(_impact, 10f);
         Destroy(gameObject, Time.deltaTime);
         AudioSource _explosionSound = (AudioSource)Instantiate(
