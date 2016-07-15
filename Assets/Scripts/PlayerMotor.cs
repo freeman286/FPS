@@ -44,12 +44,7 @@ public class PlayerMotor : MonoBehaviour {
     }
 
     void Update () {
-        if (weaponManager.GetCurrentWeapon().name == "Shield") {
-            cameraRotationLimit = 20f;
-        }
-        else {
-            cameraRotationLimit = 50f;
-        }
+        cameraRotationLimit = weaponManager.GetCurrentWeapon().cameraRotationLimit;
     }
 
     void FixedUpdate () {

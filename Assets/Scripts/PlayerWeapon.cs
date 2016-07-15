@@ -40,4 +40,6 @@ public class PlayerWeapon : MonoBehaviour{
     public int barrels;
 
     public bool primary;
+
+    public float cameraRotationLimit = 50f;
 }
