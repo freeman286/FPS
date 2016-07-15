@@ -92,8 +92,7 @@ public class PlayerShoot : NetworkBehaviour {
         }
 
         if (!weaponManager.IsMelee() && !daulGun) {
-            if ((shooting < currentWeapon.shootCooldown / 6 && !weaponManager.IsDualWielding()) || (shooting < currentWeapon.shootCooldown / 12))
-            {
+            if ((shooting < currentWeapon.shootCooldown / 6 && !weaponManager.IsDualWielding()) || (shooting < currentWeapon.shootCooldown / 12)) {
                 weaponHolder.transform.Rotate(-2, 0, 0 * Time.deltaTime);
                 altWeaponHolder.transform.Rotate(2, 0, 0 * Time.deltaTime);
             }

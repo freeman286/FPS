@@ -416,7 +416,7 @@ public class WeaponManager : NetworkBehaviour
     }
 
     public void Hitting() {
-        if (hitting < currentWeapon.shootCooldown / 4){
+        if (hitting < currentWeapon.shootCooldown / 4) {
             weaponHolder.transform.Rotate(12, 12, 0 * Time.deltaTime);
             weaponHolder.transform.Translate(-0.24f, 0, 0 * Time.deltaTime);
         } else if (hitting < currentWeapon.shootCooldown) {
