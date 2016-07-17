@@ -84,8 +84,7 @@ public class PlayerShoot : NetworkBehaviour {
                 else {
                     InvokeRepeating("Shoot", 0f, 1f / currentWeapon.fireRate);
                 }
-            }
-            else if (Input.GetButtonUp("Fire1")) {
+            } else if (Input.GetButtonUp("Fire1")) {
                 CancelInvoke("Shoot");
             }
             currentBurst = 0;

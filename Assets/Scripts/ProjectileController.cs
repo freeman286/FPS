@@ -151,7 +151,7 @@ public class ProjectileController : NetworkBehaviour {
 
         foreach (var _hit in hitColliders) {
 
-            if (_hit.transform.tag == "Player" && _hit.transform.GetComponent<Player>()) {
+            if (_hit.transform.name == "Skull" && _hit.transform.root.GetComponent<Player>()) {
 
                 float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
