@@ -254,9 +254,6 @@ public class Player : NetworkBehaviour {
 
         SetDefaults();
 
-        // Overide altWeaponHolder position
-        altWeaponHolder.transform.localPosition = new Vector3(-0.912f, 0, 0);
-
     }
 
     public void SetDefaults() {
@@ -276,6 +273,9 @@ public class Player : NetworkBehaviour {
         weaponHolder.transform.parent = cam.transform;
         weaponHolder.transform.rotation = cam.transform.rotation;
         altWeaponHolder.transform.parent = weaponHolder.transform;
+
+        // Overide altWeaponHolder position
+        altWeaponHolder.transform.localPosition = new Vector3(-0.912f, 0, 0);
 
         weaponManager.FillMags();
         weaponManager.EquipPrimary();

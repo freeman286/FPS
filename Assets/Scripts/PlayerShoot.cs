@@ -198,7 +198,7 @@ public class PlayerShoot : NetworkBehaviour {
             barrel = 0;
         }
 
-        if (weaponManager.GetCurrentEjectionPort() != null) {
+        if (weaponManager.GetCurrentEjectionPort() != null && shooting > 1) {
             CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation, barrel, daulGun);
         } else {
             CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation, barrel, daulGun);
