@@ -34,8 +34,6 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool homing;
 
-    public int homingness;
-
     public int life = 200;
 
     private int framesSinceCreated = 0;
@@ -98,7 +96,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if ((framesSinceCreated > life || (!explosive && !sticky && bounces < 1)) && !impacts) {
             if (explosive) {
-                Explode(Quaternion.identity);
+                Explode(Quaternion.identity, true);
             }
             Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
@@ -109,18 +107,8 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(gameObject);
         }
 
-        if (homing && target != null && System.DateTime.Now.Millisecond % 50 == 0) {
-            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
-
-            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, homingness));
-
-            rb.velocity = transform.forward * rb.velocity.magnitude;
-
-           
-        }
-
         if (System.DateTime.Now.Millisecond % 20 == 0 && homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
-            Explode(Quaternion.identity);
+            Explode(Quaternion.identity, true);
         }
     }
 
@@ -137,7 +125,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (bounces < 1) {
             if (explosive) {
-                Explode(Quaternion.LookRotation(collision.contacts[0].normal));
+                Explode(Quaternion.LookRotation(collision.contacts[0].normal), true);
             } else if (sticky) {
                 Stick(collision);
             } else if (collision.collider.tag != "Projectile") {
@@ -146,7 +134,7 @@ public class ProjectileController : NetworkBehaviour {
         }
     }
 
-    public void Explode (Quaternion _rot) {
+    public void Explode (Quaternion _rot, bool _chain) {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
 
         foreach (var _hit in hitColliders) {
@@ -160,6 +148,10 @@ public class ProjectileController : NetworkBehaviour {
                 }
             }
 
+            if (_hit.transform.root.GetComponent<ProjectileController>() && _chain) {
+                _hit.transform.root.GetComponent<ProjectileController>().playerID = playerID;
+                _hit.transform.root.GetComponent<ProjectileController>().Explode(Quaternion.identity, false);
+            }
         }
 
 
