@@ -52,6 +52,7 @@ public class ProjectileController : NetworkBehaviour {
     // Use this for initialization
     void Start() {
         collider.enabled = false;
+
         startPos = transform.position;
         startRot = transform.rotation;
         if (repeats) {
@@ -80,6 +81,8 @@ public class ProjectileController : NetworkBehaviour {
 
             }
         }
+
+        SetRenderers(transform, false);
     }
 
     // Update is called once per frame
@@ -88,6 +91,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (Vector3.Distance(transform.position, startPos) > 0.5f && collider != null) {
             collider.enabled = true;
+            SetRenderers(transform, true);
         }
 
         if (!explosive && bounces > 0) {
@@ -116,7 +120,9 @@ public class ProjectileController : NetworkBehaviour {
 
         if (collision.collider.tag != "Shield") {
             bounces -= 1;
-        } else {
+            transform.Rotate(0, 180, 0);
+        }
+        else {
             playerID = collision.collider.transform.root.name;
             target = null;
         }
@@ -146,6 +152,7 @@ public class ProjectileController : NetworkBehaviour {
                 if (range - _dist > 0) {
                     _hit.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(range - _dist, 2) * damage), playerID);
                 }
+
             }
 
             if (_hit.transform.root.GetComponent<ProjectileController>() && _chain) {
@@ -240,4 +247,12 @@ public class ProjectileController : NetworkBehaviour {
 
         Destroy(_impact, time);
     }
-  }
+
+    public void SetRenderers(Transform _obj, bool _state) {
+        foreach (Transform child in _obj) {
+            SetRenderers(child.transform, _state);
+            child.GetComponent<Renderer>().enabled = _state;
+        }
+    }
+
+}
