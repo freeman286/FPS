@@ -212,7 +212,7 @@ public class Player : NetworkBehaviour {
         cam.transform.parent = rigidbodyOnDeath[0].transform;
 
         string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder", "AltWeaponHolder" };
-        float[] _mass = { 3f, 2f, 2f, 2f, 2f, 2f };
+        float[] _mass = { 1f, 0.5f, 0.2f, 0.2f, 1, 1f };
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             Rigidbody rigidbody = rigidbodyOnDeath[i].AddComponent<Rigidbody>();

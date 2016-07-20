@@ -188,7 +188,7 @@ public class PlayerShoot : NetworkBehaviour {
 
         weaponManager.Shooting();
 
-        PlayerRB.AddForce(-(Vector3.RotateTowards(cam.transform.forward, Vector3.down, 1, 1)) * currentWeapon.force);
+        PlayerRB.AddForce(-(Vector3.RotateTowards(cam.transform.forward, Vector3.down, 0, 0)) * currentWeapon.force);
 
         if (barrel > currentWeapon.barrels - 1) {
             barrel = 0;
