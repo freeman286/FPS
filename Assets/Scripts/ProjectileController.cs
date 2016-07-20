@@ -48,6 +48,8 @@ public class ProjectileController : NetworkBehaviour {
     public float diff;
     public Transform target;
 
+    public bool renderers;
+
 
     // Use this for initialization
     void Start() {
@@ -249,10 +251,11 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void SetRenderers(Transform _obj, bool _state) {
-        foreach (Transform child in _obj) {
-            SetRenderers(child.transform, _state);
-            child.GetComponent<Renderer>().enabled = _state;
+        if (renderers) {
+            foreach (Transform child in _obj) {
+                SetRenderers(child.transform, _state);
+                child.GetComponent<Renderer>().enabled = _state;
+            }
         }
     }
-
 }
