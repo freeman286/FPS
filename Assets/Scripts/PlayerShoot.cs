@@ -190,15 +190,11 @@ public class PlayerShoot : NetworkBehaviour {
 
         PlayerRB.AddForce(-(Vector3.RotateTowards(cam.transform.forward, Vector3.down, 1, 1)) * currentWeapon.force);
 
-        shooting = 0;
-        currentBurst += 1;
-
-
         if (barrel > currentWeapon.barrels - 1) {
             barrel = 0;
         }
 
-        if (weaponManager.GetCurrentEjectionPort() != null && shooting > 1) {
+        if (weaponManager.GetCurrentEjectionPort() != null && shooting > 0) {
             CmdOnShoot(cam.transform.position, weaponManager.GetCurrentEjectionPort().transform.position, transform.rotation, barrel, daulGun);
         } else {
             CmdOnShoot(cam.transform.position, Vector3.zero, transform.rotation, barrel, daulGun);
@@ -265,6 +261,8 @@ public class PlayerShoot : NetworkBehaviour {
             }
         }
 
+        shooting = 0;
+        currentBurst += 1;
     }
 
     [Command]
