@@ -156,9 +156,7 @@ public class Player : NetworkBehaviour {
     void Update () {
         if (rb.position.y < -10 && !isDead) {
             Die();
-            if (lastDamage != transform.name) {
-                GameManager.GetPlayer(lastDamage).kills += 1;
-            }
+            GameManager.GetPlayer(lastDamage).kills += 1;
         }
         healthRegen += 1;
         if (healthRegen > 300 && currentHealth < maxHealth) {
@@ -173,7 +171,9 @@ public class Player : NetworkBehaviour {
         if (isDead || _amount < 0)
             return;
 
-        lastDamage = _shooterID;
+        if (_shooterID != transform.name) {
+            lastDamage = _shooterID;
+        }
 
         if (isLocalPlayer && _amount != 0) {
             AudioSource _dingSound = (AudioSource)Instantiate(
@@ -193,9 +193,7 @@ public class Player : NetworkBehaviour {
 
         if (currentHealth <= 0) {
             Die();
-            if (_shooterID != transform.name) {
-                GameManager.GetPlayer(_shooterID).kills += 1;
-            }
+            GameManager.GetPlayer(lastDamage).kills += 1;
         }
     }
 
@@ -262,8 +260,6 @@ public class Player : NetworkBehaviour {
         if (timeSinceSpawned > 0) {
             timeSinceSpawned = 0;
         }
-
-        lastDamage = transform.name;
          
         rb.velocity = Vector3.zero;
         rb.mass = 0.5f;
