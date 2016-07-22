@@ -299,6 +299,10 @@ public class Player : NetworkBehaviour {
 
         RemoveProjectilesRecursively(transform);
 
+        foreach (var _playerID in GameManager.players.Keys) {
+            RemoveProjectilesRecursively(GameManager.GetPlayer(_playerID).transform);
+        }
+
     }
 
     public void RemoveProjectilesRecursively(Transform _obj) {
