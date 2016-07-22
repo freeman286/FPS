@@ -63,7 +63,7 @@ public class PlayerShoot : NetworkBehaviour {
         if (currentWeapon.fireRate <= 0 && shootCooldown > currentWeapon.shootCooldown) {
             if (Input.GetButtonDown("Fire1")) {
                 Shoot();
-                shootCooldown = 0;
+                shootCooldown = currentWeapon.shootOffset;
                 currentBurst = 0;
             }
         } else if (currentWeapon.burst > 1) {
@@ -73,7 +73,7 @@ public class PlayerShoot : NetworkBehaviour {
 
             if (currentBurst >= currentWeapon.burst) {
                 CancelInvoke("Shoot");
-                shootCooldown = 0;
+                shootCooldown = currentWeapon.shootOffset;
                 currentBurst = 0;
             }
         } else if (currentWeapon.fireRate > 0) {
@@ -121,7 +121,7 @@ public class PlayerShoot : NetworkBehaviour {
         shooting += 1;
 
         if (weaponManager.Swapping()) {
-            shootCooldown = 0;
+            shootCooldown = currentWeapon.shootOffset;
         }
 
     }

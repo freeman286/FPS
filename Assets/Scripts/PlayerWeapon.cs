@@ -18,6 +18,7 @@ public class PlayerWeapon : MonoBehaviour{
     public float spreadWhileJumping;
 
     public float shootCooldown;
+    public float shootOffset = 0f;
 
     public bool projectileWeapon;
     public float throwPower;
