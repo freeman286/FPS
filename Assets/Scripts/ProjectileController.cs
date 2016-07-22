@@ -177,7 +177,7 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Hit(Collision _collision) {
-        if ((_collision.collider.tag == "Player" || _collision.collider.tag == "Weapon") && _collision.collider.transform.root != _collision.collider.transform) {
+        if ((_collision.collider.tag == "Player") && _collision.collider.transform.root != _collision.collider.transform && _collision.collider.transform.root.name != playerID) {
 
             if (rb.mass > 3) {
                 _collision.collider.transform.root.GetComponent<Rigidbody>().mass += rb.mass / 10;
@@ -193,10 +193,6 @@ public class ProjectileController : NetworkBehaviour {
                 _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage), playerID);
             }
             
-        }
-
-        if (_collision.collider.tag == "Weapon") {
-            transform.localScale = new Vector3(0.1f / transform.parent.localScale.x, 0.1f / transform.parent.localScale.y, 0.05f / transform.parent.localScale.z);
         }
 
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
