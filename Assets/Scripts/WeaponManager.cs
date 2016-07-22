@@ -16,6 +16,9 @@ public class WeaponManager : NetworkBehaviour
     [SerializeField]
     private PlayerShoot shoot;
 
+    [SerializeField]
+    private PlayerMotor motor;
+
     public PlayerWeapon primaryWeapon;
 
     public PlayerWeapon secondaryWeapon;
@@ -371,6 +374,8 @@ public class WeaponManager : NetworkBehaviour
         else if (reloading < currentWeapon.reloadTime)
         {
             weaponHolder.transform.Rotate(-1, 0, 0 * Time.deltaTime);
+        } else if (reloading == currentWeapon.reloadTime) {
+            motor.isGrounded = true;
         }
     }
 
