@@ -50,6 +50,7 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool renderers;
 
+    private Vector3 lastPos;
 
     // Use this for initialization
     void Start() {
@@ -116,6 +117,8 @@ public class ProjectileController : NetworkBehaviour {
         if (System.DateTime.Now.Millisecond % 20 == 0 && homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
             Explode(Quaternion.identity, true);
         }
+
+        lastPos = transform.position;
     }
 
     void OnCollisionEnter(Collision collision) {
@@ -177,7 +180,7 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Hit(Collision _collision) {
-        if ((_collision.collider.tag == "Player") && _collision.collider.transform.root != _collision.collider.transform && _collision.collider.transform.root.name != playerID) {
+        if ((_collision.collider.tag == "Player") && _collision.collider.transform.root != _collision.collider.transform && _collision.collider.transform.root.name != playerID && Vector3.Distance(transform.position, lastPos) > 0.1f) {
 
             if (rb.mass > 3) {
                 _collision.collider.transform.root.GetComponent<Rigidbody>().mass += rb.mass / 10;
