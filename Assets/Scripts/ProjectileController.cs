@@ -215,17 +215,16 @@ public class ProjectileController : NetworkBehaviour {
 
         if (_collision.collider.tag != "Projectile") {
             rb.velocity = Vector3.zero;
-            rb.drag = 100;
+            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionY;
+
 
             GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
 
             float time = 0;
 
-            if (_impact.GetComponent<ParticleSystem>() == null)
-            {
+            if (_impact.GetComponent<ParticleSystem>() == null) {
                 time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
-            }
-            else {
+            } else {
                 time = _impact.GetComponent<ParticleSystem>().duration * 10;
             }
 
