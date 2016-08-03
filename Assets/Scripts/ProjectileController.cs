@@ -125,11 +125,11 @@ public class ProjectileController : NetworkBehaviour {
 
         if (collision.collider.tag != "Shield") {
             bounces -= 1;
-            transform.Rotate(0, 180, 0);
         }
         else {
             playerID = collision.collider.transform.root.name;
             target = null;
+            transform.Rotate(0, 180, 0);
         }
 
         gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
