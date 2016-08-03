@@ -77,7 +77,7 @@ public class PlayerMotor : MonoBehaviour {
         }
     }
 
-    void OnCollisionEnter(Collision collision) {
+    void OnCollisionStay(Collision collision) {
         if (collision.collider.tag == "Surface") {
             isGrounded = true;     
         }
