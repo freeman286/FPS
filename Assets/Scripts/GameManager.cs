@@ -123,7 +123,7 @@ public class GameManager : NetworkBehaviour {
                 
             }
 
-                GUILayout.Label("<color=#" + ColorToHex(_red) + ">" + "Red: " + _redScore + "</color>");
+            GUILayout.Label("<color=#" + ColorToHex(_red) + ">" + "Red: " + _redScore + "</color>");
             GUILayout.Label("<color=#" + ColorToHex(_blue) + ">" + "Blue: " + _blueScore + "</color>");
         }
 

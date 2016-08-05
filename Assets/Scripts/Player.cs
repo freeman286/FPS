@@ -79,38 +79,6 @@ public class Player : NetworkBehaviour {
     private bool firstSetup = true;
 
     public void ExteriorSetup() {
-
-        float r = 0;
-        float g = 0;
-        float b = 0;
-
-        if (GameManager.instance.matchSettings.gameMode == "Deathmatch") {
-            Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
-            while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f)))
-            {
-                r = Random.Range(0.1f, 1.0f);
-                b = Random.Range(0.1f, 1.0f);
-                g = Random.Range(0.1f, 1.0f);
-            }
-        } else if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
-            if (GameManager.GetPlayer(transform.name).team == "Red")  {
-                r = 1f;
-            } else {
-                b = 1f;
-            }
-        }
-
-
-        Color _color = new Color(r, g, b);
-
-        for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++)
-        {
-            if (rigidbodyOnDeath[i].GetComponent<Renderer>() != null)
-            {
-                rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
-            }
-        }
-
         cam.transform.position = gameObject.transform.position;
         cam.transform.parent = gameObject.transform;
         weaponHolder.transform.parent = cam.transform;
@@ -126,34 +94,6 @@ public class Player : NetworkBehaviour {
     public void PlayerSetup() {
 
         CmdBroadCastNewPlayerSetup();
-
-        wasEnabled = new bool[disableOnDeath.Length];
-        for (int i = 0; i < wasEnabled.Length; i++) {
-            wasEnabled[i] = disableOnDeath[i].enabled;
-        }
-
-        if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
-
-            int _redCount = 0;
-            int _blueCount = 0;
-
-            foreach (string _playerID in GameManager.players.Keys)
-            {
-                if (GameManager.players[_playerID].team == "Red") {
-                    _redCount += 1;
-                } else {
-                    _blueCount += 1;
-                }
-
-
-            }
-
-            if (_redCount > _blueCount) {
-                team = "Blue";
-            } else {
-                team = "Red";
-            }
-        }
 
         SetDefaults();
     }
@@ -171,6 +111,52 @@ public class Player : NetworkBehaviour {
             for (int i = 0; i < wasEnabled.Length; i++)
             {
                 wasEnabled[i] = disableOnDeath[i].enabled;
+            }
+
+            foreach (var _playerID in GameManager.players.Keys) {
+                GameManager.GetPlayer(_playerID).CmdBroadCastNewPlayerSetup();
+            }
+
+            if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
+                if (int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) % 2 == 1) {
+                    team = "Blue";
+                } else {
+                    team = "Red";
+                }
+            }
+
+            float r = 0;
+            float g = 0;
+            float b = 0;
+
+            if (GameManager.instance.matchSettings.gameMode == "Deathmatch")
+            {
+                Random.seed = int.Parse(Regex.Replace(transform.name, "[^0-9]", "")) * System.DateTime.Now.Day * System.DateTime.Now.Month * System.DateTime.Now.Year;
+                while (!((r < 0.3f || g < 0.3f || b < 0.3f) && (r > 0.7f || g > 0.7f || b > 0.7f)))
+                {
+                    r = Random.Range(0.1f, 1.0f);
+                    b = Random.Range(0.1f, 1.0f);
+                    g = Random.Range(0.1f, 1.0f);
+                }
+            } else if (GameManager.instance.matchSettings.gameMode == "Team Deathmatch") {
+                if (team == "Red")
+                {
+                    r = 1f;
+                }
+                else {
+                    b = 1f;
+                }
+            }
+
+
+            Color _color = new Color(r, g, b);
+
+            for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++)
+            {
+                if (rigidbodyOnDeath[i].GetComponent<Renderer>() != null)
+                {
+                    rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
+                }
             }
 
             firstSetup = false;
