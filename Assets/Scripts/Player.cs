@@ -76,6 +76,8 @@ public class Player : NetworkBehaviour {
     [SyncVar]
     public int timeSinceSpawned = -1;
 
+    private bool firstSetup = true;
+
     public void ExteriorSetup() {
 
         float r = 0;
@@ -122,6 +124,9 @@ public class Player : NetworkBehaviour {
     }
 
     public void PlayerSetup() {
+
+        CmdBroadCastNewPlayerSetup();
+
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < wasEnabled.Length; i++) {
             wasEnabled[i] = disableOnDeath[i].enabled;
@@ -147,6 +152,31 @@ public class Player : NetworkBehaviour {
                 team = "Blue";
             } else {
                 team = "Red";
+            }
+        }
+
+        SetDefaults();
+    }
+
+    [Command]
+    private void CmdBroadCastNewPlayerSetup()
+    {
+        RpcSetupPlayerOnAllClients();
+    }
+
+    [ClientRpc]
+    private void RpcSetupPlayerOnAllClients() {
+        if (firstSetup) {
+            wasEnabled = new bool[disableOnDeath.Length];
+            for (int i = 0; i < wasEnabled.Length; i++)
+            {
+                wasEnabled[i] = disableOnDeath[i].enabled;
+            }
+
+            firstSetup = false;
+        } else {
+            for (int i = 0; i < disableOnDeath.Length; i++) {
+                disableOnDeath[i].enabled = true;
             }
         }
 
@@ -236,6 +266,8 @@ public class Player : NetworkBehaviour {
     private IEnumerator Respawn () {
         yield return new WaitForSeconds(GameManager.instance.matchSettings.respawnTime);
 
+        CmdBroadCastNewPlayerSetup();
+
         Transform _spawnPoint = NetworkManager.singleton.GetStartPosition();
         transform.position = _spawnPoint.position;
         transform.rotation = _spawnPoint.rotation;
@@ -243,6 +275,8 @@ public class Player : NetworkBehaviour {
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             Destroy(rigidbodyOnDeath[i].GetComponent<Rigidbody>());
         }
+
+
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             trans = rigidbodyOnDeath[i].GetComponent<Transform>();
