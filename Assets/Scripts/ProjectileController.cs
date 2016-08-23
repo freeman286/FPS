@@ -146,7 +146,7 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Explode (Quaternion _rot, bool _chain) {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, range);
 
         foreach (var _hit in hitColliders) {
 
@@ -154,9 +154,7 @@ public class ProjectileController : NetworkBehaviour {
 
                 float _dist = Vector3.Distance(_hit.transform.position, gameObject.transform.position);
 
-                if (range - _dist > 0) {
-                    _hit.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(range - _dist, 2) * damage), playerID);
-                }
+                _hit.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(Mathf.Pow(range - _dist, 2) * damage), playerID);
 
             }
 
