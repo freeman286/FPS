@@ -34,6 +34,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool homing;
 
+    public bool chain;
+
     public int life = 200;
 
     private int framesSinceCreated = 0;
@@ -103,7 +105,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if ((framesSinceCreated > life || (!explosive && !sticky && bounces < 1)) && !impacts) {
             if (explosive) {
-                Explode(Quaternion.identity, true);
+                Explode(Quaternion.identity, chain);
             }
             Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
@@ -115,7 +117,7 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         if (System.DateTime.Now.Millisecond % 20 == 0 && homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
-            Explode(Quaternion.identity, true);
+            Explode(Quaternion.identity, chain);
         }
 
         lastPos = transform.position;
@@ -136,7 +138,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (bounces < 1) {
             if (explosive) {
-                Explode(Quaternion.LookRotation(collision.contacts[0].normal), true);
+                Explode(Quaternion.LookRotation(collision.contacts[0].normal), chain);
             } else if (sticky) {
                 Stick(collision);
             } else if (collision.collider.tag != "Projectile") {
