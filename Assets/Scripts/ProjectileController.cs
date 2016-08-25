@@ -204,7 +204,7 @@ public class ProjectileController : NetworkBehaviour {
         if (_impact.GetComponent<ParticleSystem>() == null) {
             time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
         } else {
-            time = _impact.GetComponent<ParticleSystem>().duration * 10;
+            time = _impact.GetComponent<ParticleSystem>().duration;
         }
 
          Destroy(_impact, time); 
