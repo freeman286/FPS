@@ -9,8 +9,10 @@ public class PlayerWeapon : MonoBehaviour{
     public int reloadTime;
     public int roundsPerShot;
     public int burst = 1;
+
     public int force;
     public float speed = 1;
+    public bool lockPlayer;
 
     public float fireRate;
     public float spread;
@@ -37,7 +39,6 @@ public class PlayerWeapon : MonoBehaviour{
     public GameObject portHolder;
     public GameObject ejectionPort;
     public GameObject casing;
-
     public int barrels;
 
     public bool primary;

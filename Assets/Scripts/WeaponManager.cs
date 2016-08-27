@@ -61,6 +61,8 @@ public class WeaponManager : NetworkBehaviour
 
     public Camera cam;
 
+    public Rigidbody rb;
+
     void Awake () {
 
         if (Camera.main.GetComponent<PlayerInfo>() != null) {
@@ -117,6 +119,12 @@ public class WeaponManager : NetworkBehaviour
         if (currentWeapon.meleeWeapon) {
             Hitting();
             hitting += 1;
+        }
+
+        if (currentWeapon.lockPlayer) {
+            rb.constraints =  RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        } else {
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ; 
         }
     }
 

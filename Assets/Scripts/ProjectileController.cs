@@ -36,6 +36,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool chain;
 
+    public int armTime;
+
     public int life = 200;
 
     private int framesSinceCreated = 0;
@@ -129,7 +131,7 @@ public class ProjectileController : NetworkBehaviour {
             playerID = collision.collider.transform.root.name;
             target = null;
             transform.Rotate(0, 180, 0);
-        } else if (collision.collider.tag != "Projectile") {
+        } else if (collision.collider.tag != "Projectile" && framesSinceCreated >= armTime) {
             bounces -= 1;
         }
 
