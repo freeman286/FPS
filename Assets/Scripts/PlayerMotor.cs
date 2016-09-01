@@ -15,11 +15,14 @@ public class PlayerMotor : MonoBehaviour {
     [SerializeField]
     private float cameraRotationLimit = 50f;
 
-    public float jumpForce = 280f;
+    public float jumpForce;
+
+    public float jumpForceAllowenceFactor;
 
     public WeaponManager weaponManager;
 
     private Rigidbody rb;
+    private PlayerController playerController;
 
     public bool isGrounded = true;
 
@@ -29,10 +32,11 @@ public class PlayerMotor : MonoBehaviour {
 
     void Start() {
         rb = GetComponent<Rigidbody>();
+        playerController = GetComponent<PlayerController>();
     }
 
     public void Move (Vector3 _velocity) {
-        velocity = _velocity;
+        velocity = _velocity.normalized * playerController.speed;
     }
 
     public void Rotate(Vector3 _rotation) {
@@ -45,6 +49,11 @@ public class PlayerMotor : MonoBehaviour {
 
     void Update () {
         cameraRotationLimit = weaponManager.GetCurrentWeapon().cameraRotationLimit;
+
+        //Speed Limit
+        if (rb.velocity.y > playerController.speed * jumpForceAllowenceFactor) {
+            rb.velocity = new Vector3(rb.velocity.x, playerController.speed * jumpForceAllowenceFactor, rb.velocity.z);
+        }
     }
 
     void FixedUpdate () {

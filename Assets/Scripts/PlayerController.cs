@@ -4,8 +4,7 @@
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField]
-    private float speed;
+    public float speed;
     
 
     public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
@@ -16,7 +15,7 @@ public class PlayerController : MonoBehaviour
     float rotationY = 0F;
 
     private PlayerMotor motor;
-
+        
     private Player player;
 
     public Animation walking;
@@ -49,12 +48,6 @@ public class PlayerController : MonoBehaviour
             framesWithCursor = 0;
         }
         framesWithCursor += 1;
-
-        //Speed Limit
-
-        if (rb.velocity.y > 5) {
-            rb.velocity = new Vector3(rb.velocity.x, 5, rb.velocity.z);
-        }
 
         //WASD movement
 
