@@ -34,6 +34,10 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool homing;
 
+    public float homingness;
+
+    public float homingnessInterval;
+
     public bool chain;
 
     public int armTime;
@@ -87,7 +91,13 @@ public class ProjectileController : NetworkBehaviour {
                 }
 
             }
+
+            if (target != null) {
+                InvokeRepeating("Homing", 0f, homingnessInterval);
+            }
         }
+
+        
 
         SetRenderers(transform, false);
     }
@@ -118,11 +128,19 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(gameObject);
         }
 
-        if (System.DateTime.Now.Millisecond % 20 == 0 && homing && target != null && Vector3.Distance(transform.position, target.transform.position) < 3 && explosive) {
+        lastPos = transform.position;
+    }
+
+    void Homing() {
+            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, homingness));
+            rb.velocity = transform.forward * rb.velocity.magnitude;
+
+
+
+        if (Vector3.Distance(transform.position, target.transform.position) < 3 && explosive){
             Explode(Quaternion.identity, chain);
         }
-
-        lastPos = transform.position;
     }
 
     void OnCollisionEnter(Collision collision) {
