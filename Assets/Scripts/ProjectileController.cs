@@ -153,8 +153,6 @@ public class ProjectileController : NetworkBehaviour {
             bounces -= 1;
         }
 
-        gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f);
-
         if (bounces < 1) {
             if (explosive) {
                 Explode(Quaternion.LookRotation(collision.contacts[0].normal), chain);
