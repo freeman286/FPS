@@ -115,7 +115,7 @@ public class ProjectileController : NetworkBehaviour {
             transform.rotation = startRot;
         }
 
-        if ((framesSinceCreated > life || (!explosive && !sticky && bounces < 1)) && !impacts) {
+        if (framesSinceCreated > life) {
             if (explosive) {
                 Explode(Quaternion.identity, chain);
             }
@@ -165,6 +165,12 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Explode (Quaternion _rot, bool _chain) {
+        if (exploding) {
+            return;
+        }
+
+        exploding = true;
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, range);
 
         foreach (var _hit in hitColliders) {
