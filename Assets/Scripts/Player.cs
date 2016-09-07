@@ -271,7 +271,7 @@ public class Player : NetworkBehaviour {
         }
 
         SetDefaults();
-
+        rb.AddForce(Vector3.up * 100);
     }
 
     public void SetDefaults() {
