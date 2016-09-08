@@ -141,7 +141,7 @@ public class ProjectileController : NetworkBehaviour {
         if (Vector3.Distance(transform.position, target.transform.position) < 3 && explosive){
             Explode(Quaternion.identity, chain);
         }
-    }
+    } 
 
     void OnCollisionEnter(Collision collision) {
 
@@ -154,7 +154,10 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         if (bounces < 1) {
-            if (explosive) {
+            if (sticky && impacts) {
+                Hit(collision);
+                Destroy(gameObject, Time.deltaTime);
+            } else if (explosive) {
                 Explode(Quaternion.LookRotation(collision.contacts[0].normal), chain);
             } else if (sticky) {
                 Stick(collision);
@@ -238,7 +241,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (_collision.collider.tag != "Projectile") {
             rb.velocity = Vector3.zero;
-            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionY;
+            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
 
             GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
@@ -279,6 +282,12 @@ public class ProjectileController : NetworkBehaviour {
                     child.GetComponent<Renderer>().enabled = _state;
                 }
             }
+        }
+    }
+
+    void OnDrawGizmosSelected () {
+        if (explosive) {
+            Gizmos.DrawWireSphere(transform.position, range);
         }
     }
 }
