@@ -148,6 +148,9 @@ public class Player : NetworkBehaviour {
                 }
             }
 
+            r /= 3;
+            b /= 3;
+            g /= 3;
 
             Color _color = new Color(r, g, b);
 
