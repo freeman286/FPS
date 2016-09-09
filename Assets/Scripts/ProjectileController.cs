@@ -115,7 +115,7 @@ public class ProjectileController : NetworkBehaviour {
             transform.rotation = startRot;
         }
 
-        if (framesSinceCreated > life) {
+        if (!impacts && framesSinceCreated > life) {
             if (explosive) {
                 Explode(Quaternion.identity, chain);
             }
@@ -221,7 +221,13 @@ public class ProjectileController : NetworkBehaviour {
             } else {
                 _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage), playerID);
             }
-            
+
+            foreach (Transform child in transform) {
+                if (child.GetComponent<TrailRenderer>() != null)
+                {
+                    child.GetComponent<TrailRenderer>().enabled = false;
+                }
+            }
         }
 
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
