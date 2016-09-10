@@ -9,13 +9,16 @@ public class RenderCamera : NetworkBehaviour   {
     public Material mat;
 
     void Start() {
-        renderedTexture = new Texture2D(Screen.width, Screen.height);
+        renderedTexture = new Texture2D(Screen.width / 10, Screen.height / 10);
         mat.mainTexture = renderedTexture;
     }
 
     void OnPostRender () {
 
-        renderedTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        Debug.Log(Screen.width);
+        Debug.Log(Screen.height);
+
+        renderedTexture.ReadPixels(new Rect(Screen.width / 2.25f, Screen.height / 2.25f, Screen.width / 10, Screen.height / 10), 0, 0);
 
         renderedTexture.Apply();
         
