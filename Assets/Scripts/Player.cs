@@ -274,7 +274,7 @@ public class Player : NetworkBehaviour {
         }
 
         SetDefaults();
-        rb.AddForce(Vector3.up * 100);
+        rb.AddForce(Vector3.up * 200 + (Vector3.zero - transform.position) * 10);
     }
 
     public void SetDefaults() {
@@ -325,7 +325,6 @@ public class Player : NetworkBehaviour {
         foreach (var _playerID in GameManager.players.Keys) {
             RemoveProjectilesRecursively(GameManager.GetPlayer(_playerID).transform);
         }
-
     }
 
     public void RemoveProjectilesRecursively(Transform _obj) {
