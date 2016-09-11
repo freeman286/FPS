@@ -117,7 +117,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (!impacts && framesSinceCreated > life) {
             if (explosive) {
-                Explode(Quaternion.identity, chain);
+                Explode(Quaternion.LookRotation(Vector3.up), chain);
             }
             Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
@@ -139,7 +139,7 @@ public class ProjectileController : NetworkBehaviour {
 
 
         if (Vector3.Distance(transform.position, target.transform.position) < 3 && explosive){
-            Explode(Quaternion.identity, chain);
+            Explode(new Quaternion(270, 0, 0, 0), chain);
         }
     } 
 
@@ -188,10 +188,9 @@ public class ProjectileController : NetworkBehaviour {
 
             if (_hit.transform.root.GetComponent<ProjectileController>() && _chain) {
                 _hit.transform.root.GetComponent<ProjectileController>().playerID = playerID;
-                _hit.transform.root.GetComponent<ProjectileController>().Explode(Quaternion.identity, false);
+                _hit.transform.root.GetComponent<ProjectileController>().Explode(Quaternion.LookRotation(Vector3.up), false);
             }
         }
-
 
         GameObject _impact = (GameObject)Instantiate(impact, transform.position, _rot);
         Destroy(_impact, 10f);
@@ -265,7 +264,7 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     void SpawnRepeat() {
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.identity);
+        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(Vector3.up));
 
         float time = 0;
 
