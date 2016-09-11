@@ -15,7 +15,7 @@ public class RenderCamera : NetworkBehaviour   {
 
     void OnPostRender () {
 
-        renderedTexture.ReadPixels(new Rect(Screen.width / 2.25f, Screen.height / 2.25f, Screen.width / 10, Screen.height / 10), 0, 0);
+        renderedTexture.ReadPixels(new Rect(Screen.width / Mathf.Sqrt(5), Screen.height / Mathf.Sqrt(5), Screen.width / 10, Screen.height / 10), 0, 0);
 
         renderedTexture.Apply();
         
