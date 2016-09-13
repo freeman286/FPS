@@ -206,7 +206,6 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(rb);
             transform.position = _collision.collider.transform.position;
             transform.SetParent(_collision.collider.transform);
-            GetComponent<NetworkTransform>().enabled = false;
             if (_collision.collider.name == "Skull") {
                 _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage * 3), playerID);
             } else {
@@ -222,6 +221,7 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         CmdImpactEffect(transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
+        GetComponent<NetworkTransform>().enabled = false;
     }
 
     public void Stick(Collision _collision) {
