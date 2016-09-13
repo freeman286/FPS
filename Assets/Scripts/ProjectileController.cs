@@ -206,6 +206,7 @@ public class ProjectileController : NetworkBehaviour {
             Destroy(rb);
             transform.position = _collision.collider.transform.position;
             transform.SetParent(_collision.collider.transform);
+            GetComponent<NetworkTransform>().enabled = false;
             if (_collision.collider.name == "Skull") {
                 _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage * 3), playerID);
             } else {
