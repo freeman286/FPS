@@ -277,13 +277,9 @@ public class PlayerShoot : NetworkBehaviour {
 
     [Command]
     void CmdProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel, string _playerID) {
-        RpcProjectileShot(_pos, _rot, _vel, _playerID);
-    }
-
-    [ClientRpc]
-    void RpcProjectileShot(Vector3 _pos, Quaternion _rot, Vector3 _vel, string _playerID) {
         GameObject _projectile = (GameObject)Instantiate(weaponManager.GetCurrentProjectile(), _pos, _rot);
         _projectile.GetComponent<Rigidbody>().velocity = _vel;
         _projectile.GetComponent<ProjectileController>().playerID = _playerID;
+        NetworkServer.Spawn(_projectile);
     }
 }

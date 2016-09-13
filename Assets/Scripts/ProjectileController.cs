@@ -192,16 +192,7 @@ public class ProjectileController : NetworkBehaviour {
             }
         }
 
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, _rot);
-        Destroy(_impact, 10f);
-        Destroy(gameObject, Time.deltaTime);
-        AudioSource _explosionSound = (AudioSource)Instantiate(
-            explosionSound.GetComponent<AudioSource>(),
-            transform.position,
-            new Quaternion(0, 0, 0, 0)
-        );
-        _explosionSound.Play();
-        Destroy(_explosionSound.gameObject, 5f);
+        CmdImpactEffect(transform.position, _rot);        
     }
 
     public void Hit(Collision _collision) {
@@ -229,17 +220,7 @@ public class ProjectileController : NetworkBehaviour {
             }
         }
 
-        GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
-
-        float time = 0;
-
-        if (_impact.GetComponent<ParticleSystem>() == null) {
-            time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
-        } else {
-            time = _impact.GetComponent<ParticleSystem>().duration;
-        }
-
-         Destroy(_impact, time); 
+        CmdImpactEffect(transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
     }
 
     public void Stick(Collision _collision) {
@@ -249,17 +230,7 @@ public class ProjectileController : NetworkBehaviour {
             rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
 
-            GameObject _impact = (GameObject)Instantiate(impact, transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
-
-            float time = 0;
-
-            if (_impact.GetComponent<ParticleSystem>() == null) {
-                time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
-            } else {
-                time = _impact.GetComponent<ParticleSystem>().duration * 10;
-            }
-
-            Destroy(_impact, time);
+            CmdImpactEffect(transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
         }
     }
 
@@ -293,6 +264,35 @@ public class ProjectileController : NetworkBehaviour {
     void OnDrawGizmosSelected () {
         if (explosive) {
             Gizmos.DrawWireSphere(transform.position, range);
+        }
+    }
+
+    [Command]
+    void CmdImpactEffect(Vector3 _pos, Quaternion _rot) {
+        RpcDoImpactEffect(_pos, _rot);
+    }
+
+    [ClientRpc]
+    void RpcDoImpactEffect(Vector3 _pos, Quaternion _rot) {
+        GameObject _impact = (GameObject)Instantiate(impact, _pos, _rot);
+        float time = 0;
+
+        if (_impact.GetComponent<ParticleSystem>() == null) {
+            time = _impact.transform.GetChild(0).GetComponent<ParticleSystem>().duration;
+        } else {
+            time = _impact.GetComponent<ParticleSystem>().duration;
+        }
+
+        Destroy(_impact, time);
+
+        if (explosive) {
+            AudioSource _explosionSound = (AudioSource)Instantiate(
+                explosionSound.GetComponent<AudioSource>(),
+                transform.position,
+                new Quaternion(0, 0, 0, 0)
+            );
+            _explosionSound.Play();
+            Destroy(_explosionSound.gameObject, 5f);
         }
     }
 }
