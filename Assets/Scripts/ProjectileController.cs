@@ -119,7 +119,6 @@ public class ProjectileController : NetworkBehaviour {
             if (explosive) {
                 CmdExplode(Quaternion.LookRotation(Vector3.up), chain);
             }
-            Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
             Destroy(gameObject);
             CancelInvoke("SpawnRepeat");
@@ -198,8 +197,7 @@ public class ProjectileController : NetworkBehaviour {
             }
         }
 
-        CmdImpactEffect(transform.position, _rot);
-        Destroy(gameObject, 2f);      
+        CmdImpactEffect(transform.position, _rot);     
     }
 
     public void Hit(Collision _collision) {
@@ -301,6 +299,7 @@ public class ProjectileController : NetworkBehaviour {
             );
             _explosionSound.Play();
             Destroy(_explosionSound.gameObject, 5f);
+            Destroy(gameObject);
         }
     }
 }
