@@ -117,7 +117,7 @@ public class ProjectileController : NetworkBehaviour {
 
         if (!impacts && framesSinceCreated > life) {
             if (explosive) {
-                Explode(Quaternion.LookRotation(Vector3.up), chain);
+                CmdExplode(Quaternion.LookRotation(Vector3.up), chain);
             }
             Destroy(gameObject);
         } else if (sticky && framesSinceCreated > life) {
@@ -139,7 +139,7 @@ public class ProjectileController : NetworkBehaviour {
 
 
         if (Vector3.Distance(transform.position, target.transform.position) < 3 && explosive){
-            Explode(new Quaternion(270, 0, 0, 0), chain);
+            CmdExplode(new Quaternion(270, 0, 0, 0), chain);
         }
     } 
 
@@ -158,7 +158,7 @@ public class ProjectileController : NetworkBehaviour {
                 Hit(collision);
                 Destroy(gameObject, Time.deltaTime);
             } else if (explosive) {
-                Explode(Quaternion.LookRotation(collision.contacts[0].normal), chain);
+                CmdExplode(Quaternion.LookRotation(collision.contacts[0].normal), chain);
             } else if (sticky) {
                 Stick(collision);
             } else {
@@ -167,7 +167,13 @@ public class ProjectileController : NetworkBehaviour {
         }
     }
 
-    public void Explode (Quaternion _rot, bool _chain) {
+    [Command]
+    void CmdExplode(Quaternion _rot, bool _chain) {
+        RpcExplode(_rot, _chain);
+    }
+
+    [ClientRpc]
+    public void RpcExplode(Quaternion _rot, bool _chain) {
         if (exploding) {
             return;
         }
@@ -188,11 +194,12 @@ public class ProjectileController : NetworkBehaviour {
 
             if (_hit.transform.root.GetComponent<ProjectileController>() && _chain) {
                 _hit.transform.root.GetComponent<ProjectileController>().playerID = playerID;
-                _hit.transform.root.GetComponent<ProjectileController>().Explode(Quaternion.LookRotation(Vector3.up), false);
+                _hit.transform.root.GetComponent<ProjectileController>().CmdExplode(Quaternion.LookRotation(Vector3.up), false);
             }
         }
 
-        CmdImpactEffect(transform.position, _rot);        
+        CmdImpactEffect(transform.position, _rot);
+        Destroy(gameObject, 2f);      
     }
 
     public void Hit(Collision _collision) {
