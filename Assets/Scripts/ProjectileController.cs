@@ -30,6 +30,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public bool impacts;
 
+    public bool sharp;
+
     public bool sticky;
 
     public bool homing;
@@ -201,29 +203,36 @@ public class ProjectileController : NetworkBehaviour {
     }
 
     public void Hit(Collision _collision) {
-        if ((_collision.collider.tag == "Player") && _collision.collider.transform.root != _collision.collider.transform && _collision.collider.transform.root.name != playerID && Vector3.Distance(transform.position, lastPos) > 0.1f) {
-
-            if (rb.mass > 3) {
-                _collision.collider.transform.root.GetComponent<Rigidbody>().mass += rb.mass / 10;
-            }
-
-            Destroy(collider);
-            Destroy(rb);
-            transform.position = _collision.collider.transform.position;
-            transform.SetParent(_collision.collider.transform);
-            if (_collision.collider.name == "Skull") {
+        if ((_collision.collider.tag == "Player")) {
+            if (_collision.collider.name == "Skull")
+            {
                 _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage * 3), playerID);
-            } else {
+            }
+            else {
                 _collision.transform.root.GetComponent<Player>().RpcTakeDamage(Mathf.RoundToInt(damage), playerID);
             }
 
-            foreach (Transform child in transform) {
-                if (child.GetComponent<TrailRenderer>() != null)
-                {
-                    child.GetComponent<TrailRenderer>().enabled = false;
+            if ((_collision.collider.tag == "Player") && _collision.collider.transform.root != _collision.collider.transform && _collision.collider.transform.root.name != playerID && Vector3.Distance(transform.position, lastPos) > 0.1f && sharp) {
+
+                if (rb.mass > 3) {
+                    _collision.collider.transform.root.GetComponent<Rigidbody>().mass += rb.mass / 10;
+                }
+
+                Destroy(collider);
+                Destroy(rb);
+                transform.position = _collision.collider.transform.position;
+                transform.SetParent(_collision.collider.transform);
+
+
+                foreach (Transform child in transform) {
+                    if (child.GetComponent<TrailRenderer>() != null)
+                    {
+                        child.GetComponent<TrailRenderer>().enabled = false;
+                    }
                 }
             }
         }
+        
 
         CmdImpactEffect(transform.position, Quaternion.LookRotation(_collision.contacts[0].normal));
         GetComponent<NetworkTransform>().enabled = false;
@@ -261,7 +270,9 @@ public class ProjectileController : NetworkBehaviour {
             foreach (Transform child in _obj) {
                 if (child.GetComponent<ParticleSystem>() == null) {
                     SetRenderers(child.transform, _state);
-                    child.GetComponent<Renderer>().enabled = _state;
+                    if (child.GetComponent<Renderer>() != null) {
+                        child.GetComponent<Renderer>().enabled = _state;
+                    }
                 }
             }
         }
