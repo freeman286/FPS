@@ -304,7 +304,7 @@ public class Player : NetworkBehaviour {
         currentHealth = maxHealth;
 
         for (int i = 0; i < disableOnDeath.Length; i++) {
-            disableOnDeath[i].enabled = wasEnabled[i];
+q
         }
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {  
