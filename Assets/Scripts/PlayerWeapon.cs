@@ -3,8 +3,11 @@
 [System.Serializable]
 public class PlayerWeapon : MonoBehaviour{
     public string name;
+
     public int damage;
-    public int range;
+    public float range;
+    public AnimationCurve damageFallOff;
+
     public int magSize;
     public int reloadTime;
     public int roundsPerShot;

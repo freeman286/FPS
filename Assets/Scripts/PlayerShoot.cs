@@ -246,7 +246,7 @@ public class PlayerShoot : NetworkBehaviour {
 
                         string[] crits = { "Skull", "RightEye", "LeftEye" };
 
-                        int _damage = currentWeapon.damage;
+                        int _damage = Mathf.RoundToInt(currentWeapon.damageFallOff.Evaluate(_hit.distance / currentWeapon.range) * currentWeapon.damage);
 
                         if (crits.Contains(_hit.collider.name)) {
                             _damage *= 3;
