@@ -120,12 +120,11 @@ public class ProjectileController : NetworkBehaviour {
         if (!impacts && framesSinceCreated > life) {
             if (explosive) {
                 CmdExplode(Quaternion.LookRotation(Vector3.up), chain);
+            } else if (sticky && framesSinceCreated > life) {
+                Destroy(gameObject);
+                CancelInvoke("SpawnRepeat");
             }
-        } else if (sticky && framesSinceCreated > life) {
-            Destroy(gameObject);
-            CancelInvoke("SpawnRepeat");
-        }
-        else if (impacts && framesSinceCreated > life && !transform.root.name.Contains("Player")) {
+        } else if (framesSinceCreated > life && !transform.root.name.Contains("Player")) {
             Destroy(gameObject);
         }
 
