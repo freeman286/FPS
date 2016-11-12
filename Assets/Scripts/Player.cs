@@ -78,6 +78,11 @@ public class Player : NetworkBehaviour {
 
     private bool firstSetup = true;
 
+    public Color color;
+
+    public Material mat;
+    public Mesh[] meshFilter;
+
     public void ExteriorSetup() {
         cam.transform.position = gameObject.transform.position;
         cam.transform.parent = gameObject.transform;
@@ -152,14 +157,17 @@ public class Player : NetworkBehaviour {
             b /= 3;
             g /= 3;
 
-            Color _color = new Color(r, g, b);
+            color = new Color(r, g, b);
 
-            for (int i = 0; i < rigidbodyOnDeath.Length - 1; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 if (rigidbodyOnDeath[i].GetComponent<Renderer>() != null)
                 {
-                    rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = _color;
+                    rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = color;
                 }
+            }
+
+            for (int i = 4; i < 6; i++) {
+                rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = Color.white;
             }
 
             firstSetup = false;
@@ -230,13 +238,17 @@ public class Player : NetworkBehaviour {
         altWeaponHolder.transform.parent = transform;
         cam.transform.parent = rigidbodyOnDeath[0].transform;
 
-        string[] _bodyPart = { "Torso", "Skull", "LeftFoot", "RightFoot", "WeaponHolder", "AltWeaponHolder" };
-        float[] _mass = { 1f, 0.5f, 0.2f, 0.2f, 1, 1f };
+        string[] _bodyPart = { "Torso", "Skull", "RightFoot", "LeftFoot", "RightEye", "LeftEye", "WeaponHolder", "AltWeaponHolder" };
+        float[] _mass = { 1f, 0.5f, 0.2f, 0.2f, 0.2f, 0.2f, 1f, 1f };
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             Rigidbody rigidbody = rigidbodyOnDeath[i].AddComponent<Rigidbody>();
             rigidbody.mass = _mass[System.Array.IndexOf(_bodyPart, rigidbodyOnDeath[i].name)];
             rigidbody.AddForce(-Vector3.forward * rigidbody.mass * 100);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            Meshinator meshi = rigidbodyOnDeath[i].AddComponent<Meshinator>();
         }
 
         for (int i = 0; i < disableOnDeath.Length; i++) {
@@ -261,17 +273,39 @@ public class Player : NetworkBehaviour {
         transform.position = _spawnPoint.position;
         transform.rotation = _spawnPoint.rotation;
 
+        for (int i = 0; i < 6; i++)  {
+            DestroyImmediate(rigidbodyOnDeath[i].GetComponent<Meshinator>());
+            DestroyImmediate(rigidbodyOnDeath[i].GetComponent<MeshRenderer>());
+        }
+
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
+            if (rigidbodyOnDeath[i].GetComponent<Meshinator>() != null) {
+                Destroy(rigidbodyOnDeath[i].GetComponent<Meshinator>());
+            }
             Destroy(rigidbodyOnDeath[i].GetComponent<Rigidbody>());
         }
 
+        for (int i = 0; i < 6; i++) {
+            MeshRenderer newMesh = rigidbodyOnDeath[i].AddComponent<MeshRenderer>();
+            newMesh.material = mat;
+            rigidbodyOnDeath[i].GetComponent<MeshFilter>().mesh = meshFilter[i];
+        }
 
+        for (int i = 0; i < 4; i++) {
+            rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = color;
+        }
 
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {
             trans = rigidbodyOnDeath[i].GetComponent<Transform>();
             trans.position = _spawnPoint.position + new Vector3(x[i], y[i], z[i]);
             trans.rotation = _spawnPoint.rotation;
         }
+
+        for (int i = 4; i < 6; i++) {
+            rigidbodyOnDeath[i].GetComponent<Renderer>().material.color = Color.white;
+            rigidbodyOnDeath[i].transform.localPosition = new Vector3(x[i], y[i], z[i]);
+        }
+
 
         SetDefaults();
         rb.AddForce(Vector3.up * 200 + (Vector3.zero - transform.position) * 10);

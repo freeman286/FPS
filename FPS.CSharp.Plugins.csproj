@@ -112,6 +112,11 @@
     <Compile Include="Assets\Standard Assets\Effects\ImageEffects\Scripts\Twirl.cs" />
     <Compile Include="Assets\Standard Assets\Effects\ImageEffects\Scripts\VignetteAndChromaticAberration.cs" />
     <Compile Include="Assets\Standard Assets\Effects\ImageEffects\Scripts\Vortex.cs" />
+    <Compile Include="Assets\Standard Assets\Meshinator\Scripts\Core\HelperScripts\Hull.cs" />
+    <Compile Include="Assets\Standard Assets\Meshinator\Scripts\Core\HelperScripts\SubHull.cs" />
+    <Compile Include="Assets\Standard Assets\Meshinator\Scripts\Core\Meshinator.cs" />
+    <Compile Include="Assets\Standard Assets\Meshinator\Scripts\Utility\Camera\MainCamera.cs" />
+    <Compile Include="Assets\Standard Assets\Meshinator\Scripts\Utility\Multithreading\ThreadManager.cs" />
     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\AfterburnerPhysicsForce.cs" />
     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\ExplosionFireAndDebris.cs" />
     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\ExplosionPhysicsForce.cs" />
@@ -225,6 +230,8 @@
     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
+    <None Include="Assets\Standard Assets\Meshinator\Documentation\ReadMe.txt" />
+    <None Include="Assets\Standard Assets\Meshinator\Example Scenes\Prefabs\Materials\diamond shader.shader" />
     <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
