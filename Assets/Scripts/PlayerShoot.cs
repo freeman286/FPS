@@ -242,12 +242,11 @@ public class PlayerShoot : NetworkBehaviour {
                 RaycastHit _hit;
 
                 if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask)) {
+                    int _damage = Mathf.RoundToInt(currentWeapon.damageFallOff.Evaluate(_hit.distance / currentWeapon.range) * currentWeapon.damage);
+
                     if (_hit.collider.tag == "Player") {
 
                         string[] crits = { "Skull", "RightEye", "LeftEye" };
-
-                        int _damage = Mathf.RoundToInt(currentWeapon.damageFallOff.Evaluate(_hit.distance / currentWeapon.range) * currentWeapon.damage);
-
                         if (crits.Contains(_hit.collider.name)) {
                             _damage *= 3;
                         }
@@ -256,6 +255,10 @@ public class PlayerShoot : NetworkBehaviour {
                     }
 
                     CmdOnHit(_hit.point, _hit.normal);
+
+                    if (_hit.collider.GetComponent<Meshinator>() != null)  {
+                        _hit.collider.GetComponent<Meshinator>().Impact(_hit.point, _hit.normal * -0.5f * _damage, Meshinator.ImpactShapes.SphericalImpact, Meshinator.ImpactTypes.Compression);
+                    } 
                 }
 
             }
