@@ -46,14 +46,14 @@ public class Meshinator : MonoBehaviour
 	// that has already had at least one collsion, but each collsion after the first will compute faster.
 	// - "CacheOnLoad" loads a copy of the mesh on Start, which means a heavier footprint from the
 	// beginning, but every deformation computation will be faster than they would without caching.
-	public CacheOptions m_CacheOption = CacheOptions.CacheAfterCollision;
+	public CacheOptions m_CacheOption = CacheOptions.CacheOnLoad;
 	
 	// This determines what kind of deformation calculations will occur on a collision.
 	// - "FlatImpact" treats the deformation as if the collision ocurred against a flat plane. This is
 	// generally fine for collisions between objects of roughly the same size.
 	// - "Spherical Impact" treats the deformation is if the collision occured against a sphere. This is
 	// good when objects colliding against this one are expected to be much smaller than this object.
-	public ImpactShapes m_ImpactShape = ImpactShapes.FlatImpact;
+	public ImpactShapes m_ImpactShape = ImpactShapes.SphericalImpact;
 	
 	// This determines what the result of the deformation calculations will be after a collision.
 	// - "Compression" compresses the mesh on impact, but does not create any extra debris
@@ -67,12 +67,12 @@ public class Meshinator : MonoBehaviour
 	// This is the maximum force that can affect a mesh on any given impact. Any force beyond this amount is
 	// negated. If m_MaxForcePerImpact is less than or equal to m_ForceResistance, then no impact will ever
 	// deform this GameObject's mesh.
-	public float m_MaxForcePerImpact = 12f;
+	public float m_MaxForcePerImpact = 30f;
 	
 	// Multiplied by the force of an impact to determine the depth of an impact/explosion/etc. Higher
 	// values indicate less dense materials (and thus more deformation), while smaller values indicate
 	// more dense materials (and thus less deformation).
-	public float m_ForceMultiplier = 0.25f;
+	public float m_ForceMultiplier = 1f;
 	
 	// Is an impact currently being calculated? If so, we'll end up ignoring other Impact calls to prevent
 	// concurrent modifications to the mesh.
