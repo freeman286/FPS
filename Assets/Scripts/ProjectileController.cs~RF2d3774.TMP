@@ -24,6 +24,8 @@ public class ProjectileController : NetworkBehaviour {
 
     public Rigidbody rb;
 
+    public bool exploding = false;
+
     public bool explosive;
 
     public bool impacts;
@@ -174,6 +176,10 @@ public class ProjectileController : NetworkBehaviour {
 
     [ClientRpc]
     public void RpcExplode(Quaternion _rot, bool _chain) {
+        if (exploding) {
+            return;
+        }
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, range);
 
         foreach (var _hit in hitColliders) {
@@ -193,6 +199,8 @@ public class ProjectileController : NetworkBehaviour {
         }
 
         CmdImpactEffect(transform.position, _rot);
+
+        exploding = true;
     }
 
     public void Hit(Collision _collision) {
