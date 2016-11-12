@@ -145,8 +145,7 @@ public class Meshinator : MonoBehaviour
 			// Find the impact point
 			foreach (ContactPoint contact in collision.contacts)
 			{
-				if (contact.otherCollider == collision.collider)
-				{
+				if (contact.otherCollider == collision.collider && collision.collider.name != "Shaft") {
 					Impact(contact.point, collision.impactForceSum, m_ImpactShape, m_ImpactType);
 					break;
 				}
