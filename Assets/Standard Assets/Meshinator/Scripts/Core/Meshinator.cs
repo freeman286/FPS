@@ -72,7 +72,7 @@ public class Meshinator : MonoBehaviour
 	// Multiplied by the force of an impact to determine the depth of an impact/explosion/etc. Higher
 	// values indicate less dense materials (and thus more deformation), while smaller values indicate
 	// more dense materials (and thus less deformation).
-	public float m_ForceMultiplier = 1f;
+	public float m_ForceMultiplier = 0.05f;
 	
 	// Is an impact currently being calculated? If so, we'll end up ignoring other Impact calls to prevent
 	// concurrent modifications to the mesh.
