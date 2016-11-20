@@ -40,6 +40,8 @@ public class PlayerShoot : NetworkBehaviour {
 
     private int barrel = 0;
 
+    public GameObject playerHitEffectPrefab;
+
 
     void Start() {
         if (cam == null)
@@ -160,12 +162,17 @@ public class PlayerShoot : NetworkBehaviour {
     }
 
     [Command]
-    void CmdOnHit (Vector3 _pos, Vector3 _normal) {
-        RpcDoHitEffect(_pos, _normal);
+    void CmdOnHit (Vector3 _pos, Vector3 _normal, bool _player, Color _color) {
+        RpcDoHitEffect(_pos, _normal, _player, _color);
     }
 
     [ClientRpc]
-    void RpcDoHitEffect(Vector3 _pos, Vector3 _normal) {
+    void RpcDoHitEffect(Vector3 _pos, Vector3 _normal, bool _player, Color _color) {
+        if (_player) {
+            GameObject _playerHitEffect = (GameObject)Instantiate(playerHitEffectPrefab, _pos, Quaternion.LookRotation(_normal)); ;
+            _playerHitEffect.transform.GetChild(0).GetComponent<ParticleSystem>().startColor = _color;
+            Destroy(_playerHitEffect, 3f);
+        }
         GameObject _hitEffect = (GameObject)Instantiate(weaponManager.GetCurrentGraphics().hitEffectPrefab, _pos, Quaternion.LookRotation(_normal));
         Destroy(_hitEffect, 2f);
     }
@@ -239,10 +246,13 @@ public class PlayerShoot : NetworkBehaviour {
                     0
                 );
 
+
                 RaycastHit _hit;
 
                 if (Physics.Raycast(cam.transform.position, cam.transform.forward + _spread, out _hit, currentWeapon.range, mask)) {
                     int _damage = Mathf.RoundToInt(currentWeapon.damageFallOff.Evaluate(_hit.distance / currentWeapon.range) * currentWeapon.damage);
+
+                    Color _color = new Color(0, 0, 0);
 
                     if (_hit.collider.tag == "Player") {
 
@@ -252,9 +262,11 @@ public class PlayerShoot : NetworkBehaviour {
                         }
 
                         CmdPlayerShot(_hit.collider.transform.root.name, _damage, transform.name);
+
+                        _color = GameManager.GetPlayer(_hit.collider.transform.root.name).color;
                     }
 
-                    CmdOnHit(_hit.point, _hit.normal);
+                    CmdOnHit(_hit.point, _hit.normal, _hit.collider.tag == "Player", _color);
 
                     if (_hit.collider.GetComponent<Meshinator>() != null)  {
                         _hit.collider.GetComponent<Meshinator>().Impact(_hit.point, _hit.normal * -0.5f * _damage, Meshinator.ImpactShapes.SphericalImpact, Meshinator.ImpactTypes.Compression);
