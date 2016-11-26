@@ -337,10 +337,6 @@ public class Player : NetworkBehaviour {
 
         currentHealth = maxHealth;
 
-        for (int i = 0; i < disableOnDeath.Length; i++) {
-            disableOnDeath[i].enabled = wasEnabled[i];
-        }
-
         for (int i = 0; i < rigidbodyOnDeath.Length; i++) {  
             Destroy(rigidbodyOnDeath[i].GetComponent<Rigidbody>());
         }
@@ -358,6 +354,10 @@ public class Player : NetworkBehaviour {
 
         foreach (var _playerID in GameManager.players.Keys) {
             RemoveProjectilesRecursively(GameManager.GetPlayer(_playerID).transform);
+        }
+
+        for (int i = 0; i < disableOnDeath.Length; i++) {
+            disableOnDeath[i].enabled = wasEnabled[i];
         }
     }
 
