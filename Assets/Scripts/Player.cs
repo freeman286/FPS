@@ -347,8 +347,10 @@ public class Player : NetworkBehaviour {
             _col.enabled = true;
         }
 
-        playerUIInstance = Instantiate(playerUIPrefab);
-        playerUIInstance.name = playerUIPrefab.name;
+        if (GameObject.Find(transform.name + "UI") == null) {
+            playerUIInstance = Instantiate(playerUIPrefab);
+            playerUIInstance.name = transform.name + "UI";
+        }
 
         RemoveProjectilesRecursively(transform);
 

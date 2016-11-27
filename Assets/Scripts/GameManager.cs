@@ -40,6 +40,7 @@ public class GameManager : NetworkBehaviour {
     public static void UnRegisterPlayer(string _playerID) {
         players.Remove(_playerID);
         names.Remove(_playerID);
+        Destroy(GameObject.Find(_playerID + "UI"));
     }
 
     public static string[] Players() {
