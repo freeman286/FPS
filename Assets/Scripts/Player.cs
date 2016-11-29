@@ -22,7 +22,7 @@ public class Player : NetworkBehaviour {
     private int maxHealth = 100;
 
     [SyncVar]
-    private int currentHealth;
+    public int currentHealth;
 
     [SyncVar]
     public string lastDamage;
@@ -347,8 +347,9 @@ public class Player : NetworkBehaviour {
             _col.enabled = true;
         }
 
-        if (GameObject.Find(transform.name + "UI") == null) {
+        if (GameObject.Find(transform.name + "UI") == null && isLocalPlayer) {
             playerUIInstance = Instantiate(playerUIPrefab);
+            playerUIInstance.GetComponent<PlayerUI>().player = this;
             playerUIInstance.name = transform.name + "UI";
         }
 
